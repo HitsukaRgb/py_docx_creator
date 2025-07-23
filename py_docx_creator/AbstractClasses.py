@@ -32,27 +32,27 @@ class DocumentCreator(ABC):
         pass
 
     @property
-    def file_name(self):
+    def file_name(self) -> str | None:
         return self._file_name
 
     @file_name.setter
-    def file_name(self, value):
+    def file_name(self, value: str) -> None:
         self._file_name = value
 
     @property
-    def path_to_document(self):
+    def path_to_document(self) -> str | None:
         return self._path_to_document
 
     @path_to_document.setter
-    def path_to_document(self, value):
+    def path_to_document(self, value: str) -> None:
         self._path_to_document = value
 
     @property
-    def document(self):
+    def document(self) -> Document:
         return self._document
 
     @document.setter
-    def document(self, value):
+    def document(self, value: Document) -> None:
         self._document = value
 
 class DocumentWriter(ABC):
@@ -83,12 +83,12 @@ class DocumentStyle(ABC):
         self._document_style: str | None = None
 
     @property
-    def document_style(self) -> str:
+    def document_style(self) -> str | None:
         """Стиль документа"""
         return self._document_style
 
     @document_style.setter
-    def document_style(self, value) -> None:
+    def document_style(self, value: str) -> None:
         """Стиль документа"""
         self._document_style = value
 
@@ -112,7 +112,7 @@ class PageStyle(ABC):
         pass
 
     @property
-    def top_margin(self) -> Pt:
+    def top_margin(self) -> Pt | None:
         """Отступ сверху"""
         return self._top_margin
 
@@ -122,7 +122,7 @@ class PageStyle(ABC):
         self._top_margin = value
 
     @property
-    def bottom_margin(self) -> Pt:
+    def bottom_margin(self) -> Pt | None:
         """Отступ снизу"""
         return self._bottom_margin
 
@@ -132,7 +132,7 @@ class PageStyle(ABC):
         self._bottom_margin = value
 
     @property
-    def left_margin(self) -> Pt:
+    def left_margin(self) -> Pt | None:
         """Отступ слева"""
         return self._left_margin
 
@@ -142,7 +142,7 @@ class PageStyle(ABC):
         self._left_margin = value
 
     @property
-    def right_margin(self) -> Pt:
+    def right_margin(self) -> Pt | None:
         """Отступ справа"""
         return self._right_margin
 
@@ -167,7 +167,7 @@ class TextStyle(ABC):
         pass
 
     @property
-    def font_size(self) -> Pt:
+    def font_size(self) -> Pt | None:
         """Размер шрифта"""
         return self._font_size
 
@@ -177,7 +177,7 @@ class TextStyle(ABC):
         self._font_size = value
 
     @property
-    def font_name(self) -> str:
+    def font_name(self) -> str | None:
         """Наименование шрифта"""
         return self._font_name
 
@@ -187,7 +187,7 @@ class TextStyle(ABC):
         self._font_name = value
 
     @property
-    def text_bold(self) -> bool:
+    def text_bold(self) -> bool | None:
         """Жирное начертание"""
         return self._text_bold
 
@@ -197,7 +197,7 @@ class TextStyle(ABC):
         self._text_bold = value
 
     @property
-    def text_italic(self) -> bool:
+    def text_italic(self) -> bool | None:
         """Курсивное начертание"""
         return self._text_italic
 
@@ -207,7 +207,7 @@ class TextStyle(ABC):
         self._text_italic = value
 
     @property
-    def text_underline(self) -> bool:
+    def text_underline(self) -> bool | None:
         """Подчеркнутое начертание"""
         return self._text_underline
 
@@ -232,7 +232,7 @@ class ParagraphStyle(ABC):
         pass
 
     @property
-    def paragraph_alignment(self) -> WD_ALIGN_PARAGRAPH:
+    def paragraph_alignment(self) -> WD_ALIGN_PARAGRAPH | None:
         """Выравнивание текста параграфа"""
         return self._paragraph_alignment
 
@@ -242,7 +242,7 @@ class ParagraphStyle(ABC):
         self._paragraph_alignment = value
 
     @property
-    def space_after_paragraph(self) -> Pt:
+    def space_after_paragraph(self) -> Pt | None:
         """Отступ после параграфа"""
         return self._space_after_paragraph
 
@@ -252,7 +252,7 @@ class ParagraphStyle(ABC):
         self._space_after_paragraph = value
 
     @property
-    def paragraph_left_indent(self) -> Inches:
+    def paragraph_left_indent(self) -> Inches | None:
         """Отступ слева от параграфа"""
         return self._paragraph_left_indent
 
@@ -262,7 +262,7 @@ class ParagraphStyle(ABC):
         self._paragraph_left_indent = value
 
     @property
-    def paragraph_right_indent(self) -> Inches:
+    def paragraph_right_indent(self) -> Inches | None:
         """Отступ справа от параграфа"""
         return self._paragraph_right_indent
 
@@ -272,7 +272,7 @@ class ParagraphStyle(ABC):
         self._paragraph_right_indent = value
 
     @property
-    def paragraph_line_spacing(self) -> float:
+    def paragraph_line_spacing(self) -> float | None:
         """Межстрочный интервал параграфа"""
         return self._paragraph_line_spacing
 
@@ -282,7 +282,7 @@ class ParagraphStyle(ABC):
         self._paragraph_line_spacing = value
 
     @property
-    def paragraph_first_line_indent(self) -> Pt:
+    def paragraph_first_line_indent(self) -> Pt | None:
         """Отступ слева первой строки параграфа"""
         return self._paragraph_first_line_indent
 
