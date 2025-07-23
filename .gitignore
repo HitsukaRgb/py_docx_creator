@@ -1,0 +1,14 @@
+﻿__pycache__/
+docxp.egg-info/
+*.pyc
+*.pyo
+*.pyd
+*.swp
+*.swo
+pyproject.toml
+.env
+.idea
+.venv/
+dist/
+py_docx_creator.egg-info/
+venv/
