@@ -28,7 +28,7 @@ pip install python-docx py_docx_creator
 ```python
 from py_docx_creator.CoreClasses import CoreDocumentCreator, CoreStyleManager
 from py_docx_creator.CustomClasses import MainPageStyle, MainDocumentWriter, MainTextStyle, HeaderParagraphStyle, \
-    MainParagraphStyle, HeaderTextStyle
+    MainParagraphStyle, HeaderTextStyle, FastWriter
 
 
 class DocumentAPI(CoreDocumentCreator):
@@ -37,26 +37,29 @@ class DocumentAPI(CoreDocumentCreator):
         super().__init__()
         self.file_name = file_name
         self.style_manager = CoreStyleManager
+        self.write_to_document = FastWriter
 
     def run(self):
         self.create_document(self.file_name)
+
         self.style_manager.PAGE_STYLE_MANAGER.apply_style(self.document, MainPageStyle)
 
-        paragraph = MainDocumentWriter.add_paragraph_to_document(self.document)
-        self.style_manager.PARAGRAPH_STYLE_MANAGER.apply_style(paragraph, HeaderParagraphStyle)
-        run = MainDocumentWriter.add_run_to_paragraph(paragraph=paragraph, text="Заголовок документа")
-        self.style_manager.TEXT_STYLE_MANAGER.apply_style(run, HeaderTextStyle)
+        self.write_to_document.write(document=self.document,
+                                     text="Заголовок документа",
+                                     text_style=HeaderTextStyle,
+                                     paragraph_style=HeaderParagraphStyle)
 
-        paragraph = MainDocumentWriter.add_paragraph_to_document(self.document)
-        self.style_manager.PARAGRAPH_STYLE_MANAGER.apply_style(paragraph, MainParagraphStyle)
-        run = MainDocumentWriter.add_run_to_paragraph(paragraph=paragraph, text="Заголовок документа")
-        self.style_manager.TEXT_STYLE_MANAGER.apply_style(run, MainTextStyle)
+        self.write_to_document.write(document=self.document,
+                                     text="Основной текст 1",
+                                     text_style=MainTextStyle,
+                                     paragraph_style=MainParagraphStyle)
 
         self.save_document()
 
 
 if __name__ == '__main__':
     DocumentAPI("Документ.docx").run()
+
 ```
 
 
