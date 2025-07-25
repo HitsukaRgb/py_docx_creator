@@ -26,9 +26,9 @@ pip install python-docx py_docx_creator
 ## Пример использования
 
 ```python
-from py_docx_creator.CoreClasses import CoreDocumentCreator
-from py_docx_creator.CustomClasses import MainPageFormat, MainDocumentWriter, HeaderParagraphFormat, MainTextStyle, \
-    MainParagraphFormat
+from py_docx_creator.CoreClasses import CoreDocumentCreator, CoreStyleManager
+from py_docx_creator.CustomClasses import MainPageStyle, MainDocumentWriter, MainTextStyle, HeaderParagraphStyle, \
+    MainParagraphStyle, HeaderTextStyle
 
 
 class DocumentAPI(CoreDocumentCreator):
@@ -36,24 +36,26 @@ class DocumentAPI(CoreDocumentCreator):
     def __init__(self, file_name: str):
         super().__init__()
         self.file_name = file_name
+        self.style_manager = CoreStyleManager
 
     def run(self):
         self.create_document(self.file_name)
-        MainPageFormat().apply_style(document=self.document)
-        paragraph = MainDocumentWriter.add_paragraph_to_document(self.document)
-        HeaderParagraphFormat().apply_style(paragraph=paragraph)
-        run = MainDocumentWriter.add_run_to_paragraph(paragraph=paragraph, text="Какой либо текст")
-        MainTextStyle().apply_style(run=run)
+        self.style_manager.PAGE_STYLE_MANAGER.apply_style(self.document, MainPageStyle)
 
         paragraph = MainDocumentWriter.add_paragraph_to_document(self.document)
-        MainParagraphFormat().apply_style(paragraph=paragraph)
-        run = MainDocumentWriter.add_run_to_paragraph(paragraph=paragraph, text="Какой либо текст")
-        MainTextStyle().apply_style(run=run)
+        self.style_manager.PARAGRAPH_STYLE_MANAGER.apply_style(paragraph, HeaderParagraphStyle)
+        run = MainDocumentWriter.add_run_to_paragraph(paragraph=paragraph, text="Заголовок документа")
+        self.style_manager.TEXT_STYLE_MANAGER.apply_style(run, HeaderTextStyle)
+
+        paragraph = MainDocumentWriter.add_paragraph_to_document(self.document)
+        self.style_manager.PARAGRAPH_STYLE_MANAGER.apply_style(paragraph, MainParagraphStyle)
+        run = MainDocumentWriter.add_run_to_paragraph(paragraph=paragraph, text="Заголовок документа")
+        self.style_manager.TEXT_STYLE_MANAGER.apply_style(run, MainTextStyle)
+
         self.save_document()
 
 
 if __name__ == '__main__':
-    
     DocumentAPI("Документ.docx").run()
 ```
 

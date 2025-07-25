@@ -12,3 +12,4 @@ pyproject.toml
 dist/
 py_docx_creator.egg-info/
 venv/
+main.py

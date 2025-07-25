@@ -1,51 +1,63 @@
-from docx.enum.text import WD_ALIGN_PARAGRAPH
+from dataclasses import dataclass
+
 from docx.shared import Pt, Inches
 
-from py_docx_creator.CoreClasses import CoreDocumentStyle, DocumentStyles, CorePageStyle, CoreParagraphFormat, CoreTextStyle, \
-    FontNames, CoreDocumentWriter
+from py_docx_creator.AbstractClasses import DocumentStyles, FontNames
+from py_docx_creator.CoreClasses import CoreDocumentStyle, CorePageStyle, \
+    CoreTextStyle, CoreDocumentWriter, AlignParagraph, CoreParagraphStyle
 
 
 class NormalDocumentStyle(CoreDocumentStyle):
     """Стандартный стиль документа"""
+
     def __init__(self):
         super().__init__()
         self.document_style = DocumentStyles.Normal.value
 
-class MainPageFormat(CorePageStyle):
+
+@dataclass
+class MainPageStyle(CorePageStyle):
     """Основной формат страницы"""
-    def __init__(self):
-        super().__init__()
-        self.top_margin = Pt(15)
-        self.bottom_margin = Pt(10)
-        self.left_margin = Pt(75)
-        self.right_margin = Pt(75)
+    top_margin: Pt | None = Pt(15)
+    bottom_margin: Pt | None = Pt(10)
+    left_margin: Pt | None = Pt(75)
+    right_margin: Pt | None = Pt(75)
 
-class MainParagraphFormat(CoreParagraphFormat):
+
+@dataclass
+class MainParagraphStyle(CoreParagraphStyle):
     """Стиль основного текста"""
-    def __init__(self):
-        super().__init__()
-        self.paragraph_alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-        self.space_after_paragraph = Pt(0)
-        self.paragraph_left_indent = Inches(-0.5)
-        self.paragraph_right_indent = Inches(-0.5)
-        self.paragraph_line_spacing = 1.15
-        self.paragraph_first_line_indent = 20
+    alignment: AlignParagraph | None = AlignParagraph.JUSTIFY.value
+    space_after: Pt | None = Pt(0)
+    left_indent: Inches | None = Inches(-0.5)
+    right_indent: Inches | None = Inches(-0.5)
+    line_spacing: float | None = 1.15
+    first_line_indent: Pt | None = 20
 
-class HeaderParagraphFormat(CoreParagraphFormat):
+
+@dataclass
+class HeaderParagraphStyle(CoreParagraphStyle):
     """Стиль для заголовков """
-    def __init__(self):
-        super().__init__()
-        self.paragraph_alignment = WD_ALIGN_PARAGRAPH.CENTER
-        self.paragraph_left_indent = Inches(-0.5)
-        self.paragraph_right_indent = Inches(-0.5)
+    alignment: AlignParagraph = AlignParagraph.CENTER.value
+    left_indent: Inches = Inches(-0.5)
+    right_indent: Inches = Inches(-0.5)
 
-class MainTextStyle(CoreTextStyle):
-    """Основной стиль текста"""    
-    def __init__(self):
-        super().__init__()
-        self.font_size = Pt(10)
-        self.font_name = FontNames.TimesNewRoman.value
 
 class MainDocumentWriter(CoreDocumentWriter):
     def __init__(self):
         super().__init__()
+
+
+@dataclass
+class MainTextStyle(CoreTextStyle):
+    """Основной стиль текста"""
+    size: Pt = Pt(10)
+    name: str = FontNames.TimesNewRoman.value
+    bold: bool = False
+
+
+@dataclass
+class HeaderTextStyle(CoreTextStyle):
+    size: Pt = Pt(12)
+    name: str = FontNames.TimesNewRoman.value
+    bold = True

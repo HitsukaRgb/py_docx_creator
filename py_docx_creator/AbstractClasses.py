@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from enum import Enum
 
 from docx.document import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
@@ -7,6 +9,35 @@ from docx.styles.styles import Styles
 from docx.text.paragraph import Paragraph
 from docx.text.run import Run
 
+
+# region _________________Перечни для подстановки_________________
+
+class FontNames(Enum):
+    """Перечень наименований шрифтов"""
+    TimesNewRoman = "Times New Roman"
+
+
+class DocumentStyles(Enum):
+    """Перечень стилей документа"""
+    Normal = "Normal"
+
+
+@dataclass
+class AlignParagraph:
+    LEFT: WD_ALIGN_PARAGRAPH = WD_ALIGN_PARAGRAPH.LEFT
+    CENTER: WD_ALIGN_PARAGRAPH = WD_ALIGN_PARAGRAPH.CENTER
+    RIGHT: WD_ALIGN_PARAGRAPH = WD_ALIGN_PARAGRAPH.RIGHT
+    JUSTIFY: WD_ALIGN_PARAGRAPH = WD_ALIGN_PARAGRAPH.JUSTIFY
+    DISTRIBUTE: WD_ALIGN_PARAGRAPH = WD_ALIGN_PARAGRAPH.DISTRIBUTE
+    JUSTIFY_MED: WD_ALIGN_PARAGRAPH = WD_ALIGN_PARAGRAPH.JUSTIFY_MED
+    JUSTIFY_HI: WD_ALIGN_PARAGRAPH = WD_ALIGN_PARAGRAPH.JUSTIFY_HI
+    JUSTIFY_LOW: WD_ALIGN_PARAGRAPH = WD_ALIGN_PARAGRAPH.JUSTIFY_LOW
+    THAI_JUSTIFY: WD_ALIGN_PARAGRAPH = WD_ALIGN_PARAGRAPH.THAI_JUSTIFY
+
+
+# endregion _________________Перечни для подстановки_________________
+
+# region _________________Управление документом_________________
 
 class DocumentCreator(ABC):
     """Класс для создания, чтения, записи документа"""
@@ -55,6 +86,7 @@ class DocumentCreator(ABC):
     def document(self, value: Document) -> None:
         self._document = value
 
+
 class DocumentWriter(ABC):
     """Класс для наполнения документа"""
 
@@ -75,6 +107,7 @@ class DocumentWriter(ABC):
     def add_page_break(document: Document) -> None:
         """Добавление разрыва страницы в документ"""
         pass
+
 
 class DocumentStyle(ABC):
     """Стиль документа"""
@@ -97,196 +130,121 @@ class DocumentStyle(ABC):
         """Получение стиля документа"""
         pass
 
-class PageStyle(ABC):
-    """Отступы от краев страницы"""
 
-    def __init__(self):
-        self._top_margin: Pt | None = None
-        self._bottom_margin: Pt | None = None
-        self._left_margin: Pt | None = None
-        self._right_margin: Pt | None = None
+# endregion _________________Управление документом_________________
 
-    @abstractmethod
-    def apply_style(self, document: Document) -> None:
-        """Применение стиля"""
-        pass
-
-    @property
-    def top_margin(self) -> Pt | None:
-        """Отступ сверху"""
-        return self._top_margin
-
-    @top_margin.setter
-    def top_margin(self, value: Pt) -> None:
-        """Отступ сверху"""
-        self._top_margin = value
-
-    @property
-    def bottom_margin(self) -> Pt | None:
-        """Отступ снизу"""
-        return self._bottom_margin
-
-    @bottom_margin.setter
-    def bottom_margin(self, value: Pt) -> None:
-        """Отступ снизу"""
-        self._bottom_margin = value
-
-    @property
-    def left_margin(self) -> Pt | None:
-        """Отступ слева"""
-        return self._left_margin
-
-    @left_margin.setter
-    def left_margin(self, value: Pt) -> None:
-        """Отступ слева"""
-        self._left_margin = value
-
-    @property
-    def right_margin(self) -> Pt | None:
-        """Отступ справа"""
-        return self._right_margin
-
-    @right_margin.setter
-    def right_margin(self, value: Pt) -> None:
-        """Отступ справа"""
-        self._right_margin = value
-
+# region _________________Стили_________________
 class TextStyle(ABC):
-    """Стиль текста"""
+    """
+    Стиль текста.
 
-    def __init__(self):
-        self._font_size: Pt | None = None
-        self._font_name: str | None = None
-        self._text_bold: bool | None = None
-        self._text_italic: bool | None = None
-        self._text_underline: bool | None = None
+    Атрибуты:
+        size ( Pt | None): # размер шрифта
 
-    @abstractmethod
-    def apply_style(self, run: Run) -> None:
-        """Применение стиля"""
-        pass
+        name ( str | None): # наименование шрифта
 
-    @property
-    def font_size(self) -> Pt | None:
-        """Размер шрифта"""
-        return self._font_size
+        bold ( bool | None): # жирное начертание шрифта
 
-    @font_size.setter
-    def font_size(self, value: Pt) -> None:
-        """Размер шрифта"""
-        self._font_size = value
+        italic ( bool | None): # курсивное начертание шрифта
 
-    @property
-    def font_name(self) -> str | None:
-        """Наименование шрифта"""
-        return self._font_name
+        underline ( bool | None): # подчеркнутое начертание шрифта
 
-    @font_name.setter
-    def font_name(self, value: str) -> None:
-        """Наименование шрифта"""
-        self._font_name = value
+    """
 
-    @property
-    def text_bold(self) -> bool | None:
-        """Жирное начертание"""
-        return self._text_bold
+    size: Pt | None  # размер шрифта
+    name: str | None  # наименование шрифта
+    bold: bool | None  # жирное начертание шрифта
+    italic: bool | None  # курсивное начертание шрифта
+    underline: bool | None  # подчеркнутое начертание шрифта
 
-    @text_bold.setter
-    def text_bold(self, value: bool) -> None:
-        """Жирное начертание"""
-        self._text_bold = value
 
-    @property
-    def text_italic(self) -> bool | None:
-        """Курсивное начертание"""
-        return self._text_italic
+class PageStyle(ABC):
+    """
+    Стиль страницы.
 
-    @text_italic.setter
-    def text_italic(self, value: bool) -> None:
-        """Курсивное начертание"""
-        self._text_italic = value
+        Атрибуты:
+            top_margin ( Pt | None): # отступ сверху
 
-    @property
-    def text_underline(self) -> bool | None:
-        """Подчеркнутое начертание"""
-        return self._text_underline
+            bottom_margin ( Pt | None): # отступ снизу
 
-    @text_underline.setter
-    def text_underline(self, value: bool) -> None:
-        """Подчеркнутое начертание"""
-        self._text_underline = value
+            left_margin ( Pt | None): # отступ слева
+
+            right_margin ( Pt | None): # отступ справа
+
+    """
+
+    top_margin: Pt | None  # отступ сверху
+    bottom_margin: Pt | None  # отступ снизу
+    left_margin: Pt | None  # отступ слева
+    right_margin: Pt | None  # отступ справа
+
 
 class ParagraphStyle(ABC):
+    """
+    Стиль форматирования параграфа.
 
-    def __init__(self):
-        self._paragraph_alignment: WD_ALIGN_PARAGRAPH | None = None
-        self._space_after_paragraph: Pt | None = None
-        self._paragraph_left_indent: Inches | None = None
-        self._paragraph_right_indent: Inches | None = None
-        self._paragraph_line_spacing: float | None = None
-        self._paragraph_first_line_indent: Pt | None = None
+    Атрибуты:
+        alignment (AlignParagraph | None): Выравнивание текста (влево, по центру, по ширине и т.п.).
 
+        space_after (Pt | None): Отступ после параграфа.
+
+        space_before (Pt | None): Отступ перед параграфом.
+
+        left_indent (Inches | None): Отступ от левого края страницы.
+
+        right_indent (Inches | None): Отступ от правого края страницы.
+
+        line_spacing (float | None): Межстрочный интервал.
+
+        first_line_indent (Pt | None): Отступ первой строки (красная строка).
+
+        page_break_before (bool | None): Разрыв страницы перед параграфом.
+    """
+
+    alignment: AlignParagraph | None  # выравнивание
+    space_after: Pt | None  # отступ до параграфа
+    space_before: Pt | None  # отступ после параграфа
+    left_indent: Inches | None  # отступ от левого края
+    right_indent: Inches | None  # отступ от правого края
+    line_spacing: float | None  # межстрочный интервал
+    first_line_indent: Pt | None  # отступ красной строки
+    page_break_before: bool | None  # разрыв страницы перед параграфом
+
+
+# endregion _________________Стили_________________
+
+# region _________________Управление стилями_________________
+class PageStyleManager(ABC):
+    @staticmethod
     @abstractmethod
-    def apply_style(self, paragraph: Paragraph) -> None:
+    def apply_style(document: Document, style: PageStyle) -> None:
+        """Применение стиля"""
+        pass
+
+
+class TextStyleManager(ABC):
+    @staticmethod
+    @abstractmethod
+    def apply_style(run: Run, style: TextStyle) -> None:
+        """Применение стиля"""
+        pass
+
+
+class ParagraphStyleManager(ABC):
+    @staticmethod
+    @abstractmethod
+    def apply_style(paragraph: Paragraph, style: ParagraphStyle) -> None:
         """Применение стиля к параграфу"""
         pass
 
-    @property
-    def paragraph_alignment(self) -> WD_ALIGN_PARAGRAPH | None:
-        """Выравнивание текста параграфа"""
-        return self._paragraph_alignment
 
-    @paragraph_alignment.setter
-    def paragraph_alignment(self, value: WD_ALIGN_PARAGRAPH) -> None:
-        """Выравнивание текста параграфа"""
-        self._paragraph_alignment = value
+# endregion _________________Управление стилями_________________
 
-    @property
-    def space_after_paragraph(self) -> Pt | None:
-        """Отступ после параграфа"""
-        return self._space_after_paragraph
+# region _________________Централизированное управление менеджерами_________________
 
-    @space_after_paragraph.setter
-    def space_after_paragraph(self, value: Pt) -> None:
-        """Отступ после параграфа"""
-        self._space_after_paragraph = value
-
-    @property
-    def paragraph_left_indent(self) -> Inches | None:
-        """Отступ слева от параграфа"""
-        return self._paragraph_left_indent
-
-    @paragraph_left_indent.setter
-    def paragraph_left_indent(self, value: Inches) -> None:
-        """Отступ слева от параграфа"""
-        self._paragraph_left_indent = value
-
-    @property
-    def paragraph_right_indent(self) -> Inches | None:
-        """Отступ справа от параграфа"""
-        return self._paragraph_right_indent
-
-    @paragraph_right_indent.setter
-    def paragraph_right_indent(self, value: Inches) -> None:
-        """Отступ справа от параграфа"""
-        self._paragraph_right_indent = value
-
-    @property
-    def paragraph_line_spacing(self) -> float | None:
-        """Межстрочный интервал параграфа"""
-        return self._paragraph_line_spacing
-
-    @paragraph_line_spacing.setter
-    def paragraph_line_spacing(self, value: float) -> None:
-        """Межстрочный интервал параграфа"""
-        self._paragraph_line_spacing = value
-
-    @property
-    def paragraph_first_line_indent(self) -> Pt | None:
-        """Отступ слева первой строки параграфа"""
-        return self._paragraph_first_line_indent
-
-    @paragraph_first_line_indent.setter
-    def paragraph_first_line_indent(self, value: Pt) -> None:
-        """Отступ слева первой строки параграфа"""
-        self._paragraph_first_line_indent = value
+@dataclass
+class StyleManager(ABC):
+    PAGE_STYLE_MANAGER: PageStyleManager
+    TEXT_STYLE_MANAGER: TextStyleManager
+    PARAGRAPH_STYLE_MANAGER: ParagraphStyleManager
+# endregion _________________Централизированное управление менеджерами_________________
