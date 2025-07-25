@@ -1,10 +1,12 @@
 from dataclasses import dataclass
+from typing import Any
 
+from docx import Document
 from docx.shared import Pt, Inches
 
 from py_docx_creator.AbstractClasses import DocumentStyles, FontNames
 from py_docx_creator.CoreClasses import CoreDocumentStyle, CorePageStyle, \
-    CoreTextStyle, CoreDocumentWriter, AlignParagraph, CoreParagraphStyle
+    CoreTextStyle, CoreDocumentWriter, AlignParagraph, CoreParagraphStyle, CoreStyleManager
 
 
 class NormalDocumentStyle(CoreDocumentStyle):
@@ -61,3 +63,27 @@ class HeaderTextStyle(CoreTextStyle):
     size: Pt = Pt(12)
     name: str = FontNames.TimesNewRoman.value
     bold = True
+
+
+class FastWriter(CoreDocumentWriter):
+    """Класс для быстрой записи в документ"""
+
+    @classmethod
+    def write(cls, document: Document, text: str, paragraph_style: Any, text_style: Any) -> None:
+        """
+        Метод записи в документ
+        Атрибуты:
+
+            document: Document - документ для записи
+
+            text: str - записываемый текст
+
+            paragraph_style: Any - стиль параграфа
+
+            text_style: Any - стиль текста
+
+        """
+        paragraph = cls.add_paragraph_to_document(document)
+        CoreStyleManager.PARAGRAPH_STYLE_MANAGER.apply_style(paragraph, paragraph_style)
+        run = cls.add_run_to_paragraph(paragraph, text)
+        CoreStyleManager.TEXT_STYLE_MANAGER.apply_style(run, text_style)

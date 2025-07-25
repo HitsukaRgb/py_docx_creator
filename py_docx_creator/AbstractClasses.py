@@ -134,6 +134,8 @@ class DocumentStyle(ABC):
 # endregion _________________Управление документом_________________
 
 # region _________________Стили_________________
+
+@dataclass
 class TextStyle(ABC):
     """
     Стиль текста.
@@ -158,6 +160,7 @@ class TextStyle(ABC):
     underline: bool | None  # подчеркнутое начертание шрифта
 
 
+@dataclass
 class PageStyle(ABC):
     """
     Стиль страницы.
@@ -179,6 +182,7 @@ class PageStyle(ABC):
     right_margin: Pt | None  # отступ справа
 
 
+@dataclass
 class ParagraphStyle(ABC):
     """
     Стиль форматирования параграфа.

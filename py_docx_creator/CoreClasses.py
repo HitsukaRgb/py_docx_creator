@@ -33,9 +33,6 @@ class CoreDocumentCreator(DocumentCreator):
 
 class CoreDocumentWriter(DocumentWriter):
 
-    def __init__(self):
-        super().__init__()
-
     @staticmethod
     def add_paragraph_to_document(document: Document) -> Paragraph:
         return document.add_paragraph()
