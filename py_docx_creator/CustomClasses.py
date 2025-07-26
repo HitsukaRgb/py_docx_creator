@@ -1,10 +1,10 @@
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Type
 
 from docx import Document
 from docx.shared import Pt, Inches
 
-from py_docx_creator.AbstractClasses import DocumentStyles, FontNames
+from py_docx_creator.AbstractClasses import DocumentStyles, FontNames, ParagraphStyle, TextStyle
 from py_docx_creator.CoreClasses import CoreDocumentStyle, CorePageStyle, \
     CoreTextStyle, CoreDocumentWriter, AlignParagraph, CoreParagraphStyle, CoreStyleManager
 
@@ -69,7 +69,7 @@ class FastWriter(CoreDocumentWriter):
     """Класс для быстрой записи в документ"""
 
     @classmethod
-    def write(cls, document: Document, text: str, paragraph_style: CoreParagraphStyle, text_style: CoreTextStyle,
+    def write(cls, document: Document, text: str, paragraph_style: Type[ParagraphStyle], text_style: Type[TextStyle],
               size: int = None, bold: bool = None, italic: bool = None, underline: bool = None,
               space_after: int = None) -> None:
         """
