@@ -100,15 +100,15 @@ class FastWriter(CoreDocumentWriter):
             space_after: int
 
         """
-        if size:
+        if size is not None:
             text_style.size = Pt(size)
-        if bold:
+        if bold is not None:
             text_style.bold = bold
-        if italic:
+        if italic is not None:
             text_style.italic = italic
-        if underline:
+        if underline is not None:
             text_style.underline = underline
-        if space_after:
+        if space_after is not None:
             paragraph_style.space_before = Pt(space_after)
 
         paragraph = cls.add_paragraph_to_document(document)
