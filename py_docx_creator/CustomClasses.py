@@ -69,20 +69,48 @@ class FastWriter(CoreDocumentWriter):
     """Класс для быстрой записи в документ"""
 
     @classmethod
-    def write(cls, document: Document, text: str, paragraph_style: Any, text_style: Any) -> None:
+    def write(cls, document: Document, text: str, paragraph_style: CoreParagraphStyle, text_style: CoreTextStyle,
+              size: int = None, bold: bool = None, italic: bool = None, underline: bool = None,
+              space_after: int = None) -> None:
         """
         Метод записи в документ
-        Атрибуты:
+        Аргументы:
 
             document: Document - документ для записи
 
             text: str - записываемый текст
 
-            paragraph_style: Any - стиль параграфа
+            paragraph_style: CoreParagraphStyle - стиль параграфа
 
-            text_style: Any - стиль текста
+            text_style: CoreTextStyle - стиль текста
+
+        Опциональные аргументы:
+
+            Нижеперечисленные аргументы используются для быстрого изменения основных настроек стиля
+            без необходимости прописывать отдельный dataclass
+
+            size: int
+
+            bold: bool
+
+            italic: bool
+
+            underline: bool
+
+            space_after: int
 
         """
+        if size:
+            text_style.size = Pt(size)
+        if bold:
+            text_style.bold = bold
+        if italic:
+            text_style.italic = italic
+        if underline:
+            text_style.underline = underline
+        if space_after:
+            paragraph_style.space_before = Pt(space_after)
+
         paragraph = cls.add_paragraph_to_document(document)
         CoreStyleManager.PARAGRAPH_STYLE_MANAGER.apply_style(paragraph, paragraph_style)
         run = cls.add_run_to_paragraph(paragraph, text)
