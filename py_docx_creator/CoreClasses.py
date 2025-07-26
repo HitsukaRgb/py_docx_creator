@@ -65,7 +65,7 @@ class CoreTextStyle(TextStyle):
         Стиль текста.
 
         Атрибуты:
-            size ( Pt | None): # размер шрифта
+            size ( float | None): # размер шрифта
 
             name ( str | None): # наименование шрифта
 
@@ -77,7 +77,7 @@ class CoreTextStyle(TextStyle):
 
         """
 
-    size: Pt | None = None
+    size: float | None = None
     name: str | None = None
     bold: bool | None = None
     italic: bool | None = None
@@ -90,20 +90,20 @@ class CorePageStyle(PageStyle):
         Стиль страницы.
 
             Атрибуты:
-                top_margin ( Pt | None): # отступ сверху
+                top_margin ( float | None): # отступ сверху
 
-                bottom_margin ( Pt | None): # отступ снизу
+                bottom_margin ( float | None): # отступ снизу
 
-                left_margin ( Pt | None): # отступ слева
+                left_margin ( float | None): # отступ слева
 
-                right_margin ( Pt | None): # отступ справа
+                right_margin ( float | None): # отступ справа
 
         """
 
-    top_margin: Pt | None = None
-    bottom_margin: Pt | None = None
-    left_margin: Pt | None = None
-    right_margin: Pt | None = None
+    top_margin: float | None = None
+    bottom_margin: float | None = None
+    left_margin: float | None = None
+    right_margin: float | None = None
 
 
 @dataclass
@@ -114,27 +114,27 @@ class CoreParagraphStyle(ParagraphStyle):
     Атрибуты:
         alignment (AlignParagraph | None): Выравнивание текста (влево, по центру, по ширине и т.п.).
 
-        space_after (Pt | None): Отступ после параграфа.
+        space_after (float | None): Отступ после параграфа.
 
-        space_before (Pt | None): Отступ перед параграфом.
+        space_before (float | None): Отступ перед параграфом.
 
-        left_indent (Inches | None): Отступ от левого края страницы.
+        left_indent (float | None): Отступ от левого края страницы.
 
-        right_indent (Inches | None): Отступ от правого края страницы.
+        right_indent (float | None): Отступ от правого края страницы.
 
         line_spacing (float | None): Межстрочный интервал.
 
-        first_line_indent (Pt | None): Отступ первой строки (красная строка).
+        first_line_indent (float | None): Отступ первой строки (красная строка).
 
         page_break_before (bool | None): Разрыв страницы перед параграфом.
     """
     alignment: AlignParagraph | None = None  # выравнивание
-    space_after: Pt | None = None  # отступ до параграфа
-    space_before: Pt | None = None  # отступ после параграфа
-    left_indent: Inches | None = None  # отступ от левого края
-    right_indent: Inches | None = None  # отступ от правого края
+    space_after: float | None = None  # отступ до параграфа
+    space_before: float | None = None  # отступ после параграфа
+    left_indent: float | None = None  # отступ от левого края
+    right_indent: float | None = None  # отступ от правого края
     line_spacing: float | None = None  # межстрочный интервал
-    first_line_indent: Pt | None = None  # отступ красной строки
+    first_line_indent: float | None = None  # отступ красной строки
     page_break_before: bool | None = None  # разрыв страницы перед параграфом
 
 
@@ -149,7 +149,11 @@ class CorePageStyleManager(PageStyleManager):
 
         for section in document.sections:
             for field in fields(style):
-                setattr(section, field.name, getattr(style, field.name))
+                value = getattr(style, field.name)
+                if value is not None:
+                    if field.name in ("top_margin", "bottom_margin", "left_margin", "right_margin"):
+                        value = Pt(value)
+                    setattr(section, field.name, value)
 
 
 class CoreTextStyleManager(TextStyleManager):
@@ -157,7 +161,11 @@ class CoreTextStyleManager(TextStyleManager):
     def apply_style(run: Run, style: Any) -> None:
         """Применение стиля"""
         for field in fields(style):
-            setattr(run, field.name, getattr(style, field.name))
+            value = getattr(style, field.name)
+            if value is not None:
+                if field.name in ("size",):
+                    run.font.size = Pt(value)
+                setattr(run, field.name, value)
 
 
 class CoreParagraphStyleManager(ParagraphStyleManager):
@@ -167,7 +175,14 @@ class CoreParagraphStyleManager(ParagraphStyleManager):
 
         paragraph_style = paragraph.paragraph_format
         for field in fields(style):
-            setattr(paragraph_style, field.name, getattr(style, field.name))
+            value = getattr(style, field.name)
+            if value is not None:
+                if field.name in ("space_after", "space_before", "left_indent", "right_indent", "first_line_indent"):
+                    if field.name in ("left_indent", "right_indent"):
+                        value = Inches(value)
+                    else:
+                        value = Pt(value)
+                setattr(paragraph_style, field.name, value)
 
 
 class CoreStyleManager:

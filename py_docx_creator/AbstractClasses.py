@@ -141,7 +141,7 @@ class TextStyle(ABC):
     Стиль текста.
 
     Атрибуты:
-        size ( Pt | None): # размер шрифта
+        size ( float | None): # размер шрифта
 
         name ( str | None): # наименование шрифта
 
@@ -153,7 +153,7 @@ class TextStyle(ABC):
 
     """
 
-    size: Pt | None  # размер шрифта
+    size: float | None  # размер шрифта
     name: str | None  # наименование шрифта
     bold: bool | None  # жирное начертание шрифта
     italic: bool | None  # курсивное начертание шрифта
@@ -166,20 +166,20 @@ class PageStyle(ABC):
     Стиль страницы.
 
         Атрибуты:
-            top_margin ( Pt | None): # отступ сверху
+            top_margin ( float | None): # отступ сверху
 
-            bottom_margin ( Pt | None): # отступ снизу
+            bottom_margin ( float | None): # отступ снизу
 
-            left_margin ( Pt | None): # отступ слева
+            left_margin ( float | None): # отступ слева
 
-            right_margin ( Pt | None): # отступ справа
+            right_margin ( float | None): # отступ справа
 
     """
 
-    top_margin: Pt | None  # отступ сверху
-    bottom_margin: Pt | None  # отступ снизу
-    left_margin: Pt | None  # отступ слева
-    right_margin: Pt | None  # отступ справа
+    top_margin: float | None  # отступ сверху
+    bottom_margin: float | None  # отступ снизу
+    left_margin: float | None  # отступ слева
+    right_margin: float | None  # отступ справа
 
 
 @dataclass
@@ -190,28 +190,28 @@ class ParagraphStyle(ABC):
     Атрибуты:
         alignment (AlignParagraph | None): Выравнивание текста (влево, по центру, по ширине и т.п.).
 
-        space_after (Pt | None): Отступ после параграфа.
+        space_after (float | None): Отступ после параграфа.
 
-        space_before (Pt | None): Отступ перед параграфом.
+        space_before (float | None): Отступ перед параграфом.
 
-        left_indent (Inches | None): Отступ от левого края страницы.
+        left_indent (float | None): Отступ от левого края страницы.
 
-        right_indent (Inches | None): Отступ от правого края страницы.
+        right_indent (float | None): Отступ от правого края страницы.
 
         line_spacing (float | None): Межстрочный интервал.
 
-        first_line_indent (Pt | None): Отступ первой строки (красная строка).
+        first_line_indent (float | None): Отступ первой строки (красная строка).
 
         page_break_before (bool | None): Разрыв страницы перед параграфом.
     """
 
     alignment: AlignParagraph | None  # выравнивание
-    space_after: Pt | None  # отступ до параграфа
-    space_before: Pt | None  # отступ после параграфа
-    left_indent: Inches | None  # отступ от левого края
-    right_indent: Inches | None  # отступ от правого края
+    space_after: float | None  # отступ до параграфа
+    space_before: float | None  # отступ после параграфа
+    left_indent: float | None  # отступ от левого края
+    right_indent: float | None  # отступ от правого края
     line_spacing: float | None  # межстрочный интервал
-    first_line_indent: Pt | None  # отступ красной строки
+    first_line_indent: float | None  # отступ красной строки
     page_break_before: bool | None  # разрыв страницы перед параграфом
 
 
