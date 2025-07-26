@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Any, Type
 
 from docx import Document
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.shared import Pt, Inches
 
 from py_docx_creator.AbstractClasses import DocumentStyles, FontNames, ParagraphStyle, TextStyle
@@ -71,7 +72,7 @@ class FastWriter(CoreDocumentWriter):
     @classmethod
     def write(cls, document: Document, text: str, paragraph_style: Type[ParagraphStyle], text_style: Type[TextStyle],
               size: int = None, bold: bool = None, italic: bool = None, underline: bool = None,
-              space_after: int = None) -> None:
+              space_after: int = None, alignment: WD_PARAGRAPH_ALIGNMENT=None) -> None:
         """
         Метод записи в документ
         Аргументы:
@@ -99,6 +100,8 @@ class FastWriter(CoreDocumentWriter):
 
             space_after: int
 
+            alignment: AlignParagraph.*
+
         """
         if size is not None:
             text_style.size = Pt(size)
@@ -110,6 +113,9 @@ class FastWriter(CoreDocumentWriter):
             text_style.underline = underline
         if space_after is not None:
             paragraph_style.space_before = Pt(space_after)
+        if alignment is not None:
+            paragraph_style.alignment = alignment.value
+
 
         paragraph = cls.add_paragraph_to_document(document)
         CoreStyleManager.PARAGRAPH_STYLE_MANAGER.apply_style(paragraph, paragraph_style)
