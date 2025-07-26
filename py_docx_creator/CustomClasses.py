@@ -66,7 +66,7 @@ class MainTextStyle(CoreTextStyle):
 class HeaderTextStyle(CoreTextStyle):
     size: float = 12.0
     name: str = FontNames.TimesNewRoman.value
-    bold = True
+    bold: bool = True
 
 
 class FastWriter(CoreDocumentWriter):
@@ -74,8 +74,13 @@ class FastWriter(CoreDocumentWriter):
 
     @classmethod
     def write(cls, document: Document, text: str, paragraph_style: Any, text_style: Any,
-              size: float = None, bold: bool = None, italic: bool = None, underline: bool = None,
-              space_after: float = None, alignment: WD_PARAGRAPH_ALIGNMENT=None) -> None:
+              size: float | None = None,
+              bold: bool | None = None,
+              italic: bool | None = None,
+              underline: bool | None = None,
+              space_after: float | None = None,
+              alignment: WD_PARAGRAPH_ALIGNMENT | None = None,
+              first_line_indent: float | None = None) -> None:
         """
         Метод записи в документ
         Аргументы:
@@ -84,9 +89,9 @@ class FastWriter(CoreDocumentWriter):
 
             text: str - записываемый текст
 
-            paragraph_style: CoreParagraphStyle - стиль параграфа
+            paragraph_style: Any - стиль параграфа
 
-            text_style: CoreTextStyle - стиль текста
+            text_style: Any - стиль текста
 
         Опциональные аргументы:
 
@@ -105,23 +110,30 @@ class FastWriter(CoreDocumentWriter):
 
             alignment: AlignParagraph.*
 
+            first_line_indent: float
+
         """
 
-        if size is not None:
-            text_style.size = size
-        if bold is not None:
-            text_style.bold = bold
-        if italic is not None:
-            text_style.italic = italic
-        if underline is not None:
-            text_style.underline = underline
+        # проверка изменения атрибутов заданных стилей
+        if any(val is not None for val in [bold, italic, underline, size, alignment, first_line_indent, space_after]):
+            paragraph_style = copy.copy(paragraph_style())
+            text_style = copy.copy(text_style())
 
+            if bold is not None:
+                text_style.bold = bold
+            if italic is not None:
+                text_style.italic = italic
+            if underline is not None:
+                text_style.underline = underline
+            if size is not None:
+                text_style.size = size
 
-        if space_after is not None:
-            paragraph_style.space_after = space_after
-        if alignment is not None:
-            paragraph_style.alignment = alignment.value
-
+            if alignment is not None:
+                paragraph_style.alignment = alignment.value
+            if first_line_indent is not None:
+                paragraph_style.first_line_indent = first_line_indent
+            if space_after is not None:
+                paragraph_style.space_after = space_after
 
         paragraph = cls.add_paragraph_to_document(document)
         CoreStyleManager.PARAGRAPH_STYLE_MANAGER.apply_style(paragraph, paragraph_style)

@@ -26,6 +26,7 @@ pip install py_docx_creator
 ## Пример использования
 
 ```python
+from py_docx_creator.AbstractClasses import AlignParagraph
 from py_docx_creator.CoreClasses import CoreDocumentCreator, CoreStyleManager
 from py_docx_creator.CustomClasses import MainPageStyle, MainTextStyle, HeaderParagraphStyle, \
     MainParagraphStyle, HeaderTextStyle, FastWriter
@@ -38,21 +39,28 @@ class DocumentAPI(CoreDocumentCreator):
         self.file_name = file_name
         self.style_manager = CoreStyleManager
         self.write_to_document = FastWriter
-
-    def run(self):
         self.create_document(self.file_name)
 
+    def run(self):
         self.style_manager.PAGE_STYLE_MANAGER.apply_style(self.document, MainPageStyle)
 
         self.write_to_document.write(document=self.document,
                                      text="Заголовок документа",
                                      text_style=HeaderTextStyle,
-                                     paragraph_style=HeaderParagraphStyle)
+                                     paragraph_style=HeaderParagraphStyle,
+                                     italic=True, 
+                                     size=24)
 
         self.write_to_document.write(document=self.document,
                                      text="Основной текст 1",
                                      text_style=MainTextStyle,
                                      paragraph_style=MainParagraphStyle)
+
+        self.write_to_document.write(document=self.document,
+                                     text="Основной текст 2",
+                                     text_style=MainTextStyle,
+                                     paragraph_style=MainParagraphStyle, 
+                                     alignment=AlignParagraph.RIGHT)
 
         self.save_document()
 
@@ -62,6 +70,9 @@ if __name__ == '__main__':
 
 ```
 ## Пример создания собственных стилей
+
+Стоит внимательно отнестись к типизации данных так как иначе поля Вашего `dataclass` будут проигнорированы, 
+а вместо них будут использоваться значения из родительского класса.
 
 ### 1. Создания стиля для параграфа
 
@@ -78,12 +89,12 @@ from docx.shared import Pt, Inches
 @dataclass
 class YourClass(CoreParagraphStyle):
     alignment: AlignParagraph | None    = None      # выравнивание                      |   AlignParagraph.*.value
-    space_after: Pt | None              = None      # отступ до параграфа               |   Pt(int) 
-    space_before: Pt | None             = None      # отступ после параграфа            |   Pt(int) 
-    left_indent: Inches | None          = None      # отступ от левого края             |   Inches(float | int) 
-    right_indent: Inches | None         = None      # отступ от правого края            |   Inches(float | int) 
+    space_after: float | None              = None      # отступ до параграфа               |   Pt(int) 
+    space_before: float | None             = None      # отступ после параграфа            |   Pt(int) 
+    left_indent: float | None          = None      # отступ от левого края             |   Inches(float | int) 
+    right_indent: float | None         = None      # отступ от правого края            |   Inches(float | int) 
     line_spacing: float | None          = None      # межстрочный интервал              |   float
-    first_line_indent: Pt | None        = None      # отступ красной строки             |   Pt(int) 
+    first_line_indent: float | None        = None      # отступ красной строки             |   Pt(int) 
     page_break_before: bool | None      = None      # разрыв страницы перед параграфом  |   bool
 
 ```
@@ -98,11 +109,11 @@ class YourClass(CoreParagraphStyle):
 from dataclasses import dataclass
 
 from py_docx_creator.CoreClasses import CoreTextStyle
-from docx.shared import Pt
+
 
 @dataclass
 class YourClass(CoreTextStyle):
-    size: Pt | None                  = None      # размер шрифта текста             | Pt(int)
+    size: float | None               = None      # размер шрифта текста          | float
     name: str | None                 = None      # наименование шрифта              | str | FontNames.*.value
     bold: bool | None                = None      # жирное начертание шрифта         | bool
     italic: bool | None              = None      # курсивное начертание шрифта      | bool
@@ -124,14 +135,14 @@ from docx.shared import Pt
 
 @dataclass
 class YourClass(CorePageStyle):
-    top_margin: Pt | None        = None   # отступ сверху   | Pt(int)
-    bottom_margin: Pt | None     = None   # отступ снизу    | Pt(int)
-    left_margin: Pt | None       = None   # отступ слева    | Pt(int)
-    right_margin: Pt | None      = None   # отступ справа   | Pt(int)
-
+    top_margin: float | None        = None   # отступ сверху   | float
+    bottom_margin: float | None     = None   # отступ снизу    | float
+    left_margin: float | None       = None   # отступ слева    | float
+    right_margin: float | None      = None   # отступ справа   | float
 ```
 
 Поля, которые изменяться не будут указывать **не нужно** (исключить из `dataclass`).
+
 
 ### На данный момент доступно несколько заранее прописанных  стилей 
 1. [x] `MainPageStyle` - стиль страниц документа с заданными полями;

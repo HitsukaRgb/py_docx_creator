@@ -151,8 +151,11 @@ class CorePageStyleManager(PageStyleManager):
             for field in fields(style):
                 value = getattr(style, field.name)
                 if value is not None:
+
+                    # проверка необходимости преобразования типа данных
                     if field.name in ("top_margin", "bottom_margin", "left_margin", "right_margin"):
                         value = Pt(value)
+
                     setattr(section, field.name, value)
 
 
@@ -163,9 +166,12 @@ class CoreTextStyleManager(TextStyleManager):
         for field in fields(style):
             value = getattr(style, field.name)
             if value is not None:
+
+                # проверка необходимости преобразования типа данных
                 if field.name in ("size",):
-                    run.font.size = Pt(value)
-                setattr(run, field.name, value)
+                    value = Pt(value)
+
+                setattr(run.font, field.name, value)
 
 
 class CoreParagraphStyleManager(ParagraphStyleManager):
@@ -177,11 +183,14 @@ class CoreParagraphStyleManager(ParagraphStyleManager):
         for field in fields(style):
             value = getattr(style, field.name)
             if value is not None:
+
+                # проверка необходимости преобразования типа данных
                 if field.name in ("space_after", "space_before", "left_indent", "right_indent", "first_line_indent"):
                     if field.name in ("left_indent", "right_indent"):
                         value = Inches(value)
                     else:
                         value = Pt(value)
+
                 setattr(paragraph_style, field.name, value)
 
 
