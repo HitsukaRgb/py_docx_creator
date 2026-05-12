@@ -106,7 +106,6 @@ class FastWriter(CoreDocumentWriter):
         if with_leader:
             text = f"{text}\t"
             tab_stops = paragraph.paragraph_format.tab_stops
-            tab_stops.clear()
             tab_stops.add_tab_stop(
                 Inches(leader_width),
                 alignment=WD_TAB_ALIGNMENT.RIGHT,
