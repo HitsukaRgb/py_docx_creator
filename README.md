@@ -1,7 +1,8 @@
 ﻿# PDC
 
-**PyDocxCreator** — это мой небольшой Python-проект для создания и форматирования Word-документов с использованием библиотеки `python-docx`.
-Вы можете дополнять и расширять ее при необходимости. Я постарался построить гибкую основу для последующего расширения.
+**PyDocxCreator** — Небольшой Python-проект для создания и форматирования Word-документов с использованием библиотеки `python-docx`.
+
+Я постарался заложить гибкую основу для последующего расширения.
 
 
 ## Возможности
@@ -12,10 +13,16 @@
 
 ## Структура проекта
 
-- `py_docx_creator/`      — модуль с основными и абстрактными классами:
-  - `AbstractClasses.py`  — абстрактные интерфейсы
-  - `CoreClasses.py`      — реализация базовых стилей
-  - `CustomClasses.py`    — расширение с пользовательскими стилями
+- `py_docx_creator/`                — модуль с основными и абстрактными классами:
+  - `abstract_classes/`             — абстрактные интерфейсы
+    - `abc_document/`               — абстрактные классы для описания документа и взаимодействия с ним
+    - `abc_style_dataclasses/`      — абстрактные классы для описания стилей
+  - `core/` — реализация интерфейсов
+    - `document/` — реализация взаимодействия с документом
+    - `style/` — реализация пустых базовых шаблонов стилей
+  - `default_style_preset/` - несколько заготовленных стилей
+  - `enums/` - `enum`ы шрифтов, стилей документа, выравнивания
+
 
 ## Установка
 
@@ -23,139 +30,166 @@
 pip install py_docx_creator
 ```
 
-## Пример использования
-
-```python
-from py_docx_creator.AbstractClasses import AlignParagraph
-from py_docx_creator.CoreClasses import CoreDocumentCreator, CoreStyleManager
-from py_docx_creator.CustomClasses import MainPageStyle, MainTextStyle, HeaderParagraphStyle, \
-    MainParagraphStyle, HeaderTextStyle, FastWriter
-
-
-class DocumentAPI(CoreDocumentCreator):
-
-    def __init__(self, file_name: str):
-        super().__init__()
-        self.file_name = file_name
-        self.style_manager = CoreStyleManager
-        self.write_to_document = FastWriter
-        self.create_document(self.file_name)
-
-    def run(self):
-        self.style_manager.PAGE_STYLE_MANAGER.apply_style(self.document, MainPageStyle)
-
-        self.write_to_document.write(document=self.document,
-                                     text="Заголовок документа",
-                                     text_style=HeaderTextStyle,
-                                     paragraph_style=HeaderParagraphStyle,
-                                     italic=True, 
-                                     size=24)
-
-        self.write_to_document.write(document=self.document,
-                                     text="Основной текст 1",
-                                     text_style=MainTextStyle,
-                                     paragraph_style=MainParagraphStyle)
-
-        self.write_to_document.write(document=self.document,
-                                     text="Основной текст 2",
-                                     text_style=MainTextStyle,
-                                     paragraph_style=MainParagraphStyle, 
-                                     alignment=AlignParagraph.RIGHT)
-
-        self.save_document()
-
-
-if __name__ == '__main__':
-    DocumentAPI("Документ.docx").run()
-
-```
-## Пример создания собственных стилей
-
-Стоит внимательно отнестись к типизации данных так как иначе поля Вашего `dataclass` будут проигнорированы, 
-а вместо них будут использоваться значения из родительского класса.
-
-### 1. Создания стиля для параграфа
-
-Пример создание собственного стиля параграфа на основе базового класса ` CoreParagraphStyle `.
+## Базовый пример использования
 
 ```python
 
-from dataclasses import dataclass
+from py_docx_creator.core.document.document import Document
+from py_docx_creator.default_style_preset.default_paragraph_style import DefaultHeaderParagraphStyle
+from py_docx_creator.default_style_preset.default_text_style import DefaultHeaderTextStyle
 
-from py_docx_creator.CoreClasses import CoreParagraphStyle
-from py_docx_creator.AbstractClasses import AlignParagraph
-from docx.shared import Pt, Inches
-
-@dataclass
-class YourClass(CoreParagraphStyle):
-    alignment: AlignParagraph | None    = None      # выравнивание                      |   AlignParagraph.*.value
-    space_after: float | None              = None      # отступ до параграфа               |   Pt(int) 
-    space_before: float | None             = None      # отступ после параграфа            |   Pt(int) 
-    left_indent: float | None          = None      # отступ от левого края             |   Inches(float | int) 
-    right_indent: float | None         = None      # отступ от правого края            |   Inches(float | int) 
-    line_spacing: float | None          = None      # межстрочный интервал              |   float
-    first_line_indent: float | None        = None      # отступ красной строки             |   Pt(int) 
-    page_break_before: bool | None      = None      # разрыв страницы перед параграфом  |   bool
+document = Document()
+document.create_document("Документ.docx")
+document.write(document, "Базовый пример использования", paragraph_style=DefaultHeaderParagraphStyle, text_style=DefaultHeaderTextStyle)
+document.save_document()
 
 ```
-Поля, которые изменяться не будут указывать **не нужно** (исключить из `dataclass`).
 
-### 2. Создание стиля для текста
+Предусмотрена возможность прописать шаги формирования документа в отдельной функции типа `Callable`. Аргументы такой функции задаются в отдельном поле класса `Document`.
 
-Пример создания стиля текста на основе базового класса `CoreTextStyle`.
+*** Важный момент при написании функции-инструкции. Для корректной работы первый позиционный аргумент данной функции (в данном примере `doc: Document`) обязательно должен быть экземпляр класса `Document`. Данный аргумент является системным и прокидывается автоматически при выполнении кода.
 
 ```python
 
-from dataclasses import dataclass
+from py_docx_creator.core.document.document import Document
+from py_docx_creator.default_style_preset.default_paragraph_style import DefaultHeaderParagraphStyle
+from py_docx_creator.default_style_preset.default_text_style import DefaultHeaderTextStyle
 
-from py_docx_creator.CoreClasses import CoreTextStyle
+def instruction(doc: Document, **kwargs):
+    file_name = kwargs.get("name", "document.docx")
+    doc.create_document(file_name)
+    doc.write(doc, "Базовый пример использования", paragraph_style=DefaultHeaderParagraphStyle, text_style=DefaultHeaderTextStyle)
 
-
-@dataclass
-class YourClass(CoreTextStyle):
-    size: float | None               = None      # размер шрифта текста          | float
-    name: str | None                 = None      # наименование шрифта              | str | FontNames.*.value
-    bold: bool | None                = None      # жирное начертание шрифта         | bool
-    italic: bool | None              = None      # курсивное начертание шрифта      | bool
-    underline: bool | None           = None      # подчеркнутое начертание шрифта   | bool
+document = Document()
+document.create_document("Документ.docx")
+document.creation_instruction = instruction # инструкция по формированию документа
+document.instruction_kwargs = {"name": "Базовый пример использования.docx"} # аргументы выполняемой функции
+document.run_instruction(save_after=True) # запуск формирования документа 
 
 ```
-Поля, которые изменяться не будут указывать **не нужно** (исключить из `dataclass`).
 
-### 3. Создание стиля страниц документа
-
-Пример создания стиля страниц документа на основе базового класса `CorePageStyle`.
+Реализован простой агрегатор для конвейерного формирования документов `DocumentCreator`. 
 
 ```python
 
-from dataclasses import dataclass
+from py_docx_creator.core.document.document import Document
+from py_docx_creator.core.document.document_creator import DocumentCreator
+from py_docx_creator.default_style_preset.default_paragraph_style import DefaultHeaderParagraphStyle
+from py_docx_creator.default_style_preset.default_text_style import DefaultHeaderTextStyle
 
-from py_docx_creator.CoreClasses import CorePageStyle
-from docx.shared import Pt
+def instruction(doc: Document, **kwargs):
+    file_name = kwargs.get("name", "document.docx")
+    doc.create_document(file_name)
+    doc.write(doc, "Базовый пример использования", paragraph_style=DefaultHeaderParagraphStyle, text_style=DefaultHeaderTextStyle)
 
-@dataclass
-class YourClass(CorePageStyle):
-    top_margin: float | None        = None   # отступ сверху   | float
-    bottom_margin: float | None     = None   # отступ снизу    | float
-    left_margin: float | None       = None   # отступ слева    | float
-    right_margin: float | None      = None   # отступ справа   | float
+document_creator = DocumentCreator()
+for i in range(5): # имитация конвейера
+    document: Document = Document()
+    document.creation_instruction = instruction # инструкция по формированию документа
+    document.instruction_kwargs = {"name": f"{i}.docx"} # аргументы выполняемой функции (в данном случае отличные друг от друга имена файлов)
+    document_creator.add_document(document) # список экземпляров `Document` готовых к формированию
+
+document_creator.start_creating_documents(save_after=True) # запуск формирования всех документов
+
 ```
 
-Поля, которые изменяться не будут указывать **не нужно** (исключить из `dataclass`).
+## Стили
+
+Реализованы базовые стили:
+
+- Стиль страницы
+  - `DefaultPageStyle` - базовый стиль страницы документа (поля/отступы)
+- Стиль параграфа
+  - `DefaultHeaderParagraphStyle` - базовый стиль параграфа для заголовка
+  - `DefaultMainParagraphStyle` - базовый стиль параграфа для основного текста 
+- Стиль текста
+  - `DefaultHeaderTextStyle` - базовый стиль для текста заголовка
+  - `DefaultMainTextStyle` - базовый стиль для основного текста
+
+### Создание собственных стилей
+Ниже приведен пример создания стилей на основе базовых стилей
+
+```python
+
+from py_docx_creator.core.document.document import Document
+from py_docx_creator.default_style_preset.default_page_style import DefaultPageStyle
+from py_docx_creator.default_style_preset.default_paragraph_style import DefaultHeaderParagraphStyle
+from py_docx_creator.default_style_preset.default_text_style import DefaultHeaderTextStyle
+from py_docx_creator.enums.enum_align_paragraph import AlignParagraph
 
 
-### На данный момент доступно несколько заранее прописанных  стилей 
-1. [x] `MainPageStyle` - стиль страниц документа с заданными полями;
-2. [x] `MainParagraphStyle` - стиль параграфа для основного текста (текст по ширине, красная строка и др.);
-3. [x] `HeaderParagraphStyle` - стиль параграфа для заголовков (текст по центру);
+class MyTextStyle(DefaultHeaderTextStyle): # Стиль текста
+    italic = True
+    size = 24
+
+class MyParagraphStyle(DefaultHeaderParagraphStyle): # Стиль параграфа
+    alignment = AlignParagraph.LEFT.value
+
+class MyPageStyle(DefaultPageStyle): # Стиль страницы
+    left_margin = 200.0
+
+document = Document()
+document.create_document("Документ.docx")
+document.apply_style(document, style=MyPageStyle) # пример того как задать стиль страницы `PageStyle`
+document.write(document, "Базовый пример использования", paragraph_style=MyParagraphStyle, text_style=MyTextStyle)
+document.save_document()
+
+```
+
+При необходимости есть возможность создать стиль с нуля. Для этого необходимо наследоваться от базовых классов.
+
+- `PageStyle` - для стилей страницы
+- `ParagraphStyle` - для стилей параграфа
+- `TextStyle` - для стилей текста
+
+### Быстрая смена стиля
+
+Имеется возможность подправить основные параметры стилей прямо на месте записи. Для этого имеются опциональные именованные аргументы.
+
+ - `size: float` - размер шрифта
+ - `bold: bool` - жирное начертание
+ - `italic: bool` - курсивное начертание
+ - `underline: bool` - подчеркнутое начертание
+ - `space_after: float` - отступ поле параграфа
+ - `alignment: AlignParagraph` - выравнивание параграфа
+ - `first_line_indent: float` - отступ первой строки (красная строка)
+ - `with_leader: bool` - заполнение строки символом `_`
+ - `leader_width: float` - длинна заполнения символом `_` (учитывается только при `with_leader=True`, значение по умолчанию `6.8`)
 
 
 
+```python
 
+document.write(document, "Базовый пример использования", 
+               paragraph_style=DefaultHeaderParagraphStyle, 
+               text_style=DefaultHeaderTextStyle,
+               size=12,
+               bold=True,
+               alignment=AlignParagraph.RIGHT # !!! без .value !!!
+               ...
+               )
 
-*Проект находится в активной разработке.*
+```
+или же:
+```python
 
- *IN PROGRESS:*
+write_config = {
+    "paragraph_style": DefaultHeaderParagraphStyle,
+    "text_style": DefaultHeaderTextStyle,
+    "size": 13,
+    "bold": True,
+    "space_after": 10
+}
 
-**[████████████░░░░░░░░░░░░░░░░░░░░░░░░] 25%** 
+document.write(document, "Базовый пример использования", **write_config)
+
+```
+
+### TODO:
+
+- [x] Реализовать многопоточное формирование документов при использовании `DocumentCreator`
+- [x] Реализовать взаимодействие с таблицами
+- [x] Реализовать запись в виде списка (Word)
+- [x] Работа над документацией
+- [x] Рефакторинг (при необходимости)
 
