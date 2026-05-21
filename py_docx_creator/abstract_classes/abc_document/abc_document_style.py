@@ -9,16 +9,31 @@ from py_docx_creator.abstract_classes.abc_document.abc_document import ABCDocume
 
 
 class ABCDocumentStyle(ABC):
-    """Стиль документа"""
+    """Абстрактный класс для управления стилями документа"""
+
     _document_style: str | None
 
     @abstractmethod
-    def get_document_style(self, document: ABCDocument) -> Styles | None:
-        """Получение стиля документа"""
+    def get_document_style(self, document: ABCDocument) -> Styles:
+        """
+        Получение стиля документа
+
+        Args:
+            document (ABCDocument): Документ содержащий стиль
+
+        Returns:
+            Styles: Стиль документа
+        """
         pass
 
     @staticmethod
     @abstractmethod
-    def apply_style(target: ABCDocument | Run | Paragraph, style: Any):
-        """Применение стиля к передаваемому объекту"""
+    def apply_style(target: ABCDocument | Run | Paragraph, style: Any) -> None:
+        """
+        Применение стиля к передаваемому объекту
+
+        Args:
+            target (ABCDocument | Run | Paragraph): Цель применения стиля
+            style (Any): Применяемый стиль
+        """
         pass

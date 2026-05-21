@@ -6,6 +6,14 @@ from docx import Document as DocxDocument # alias
 
 
 class ABCDocument(ABC):
+    """
+    Абстрактный класс Документа
+
+    Attributes:
+        path (Path | str | None): Путь до документа
+        name (str | None): Наименование документа
+        document (DocxDocument): Класс документа python-docx
+    """
     path: Path | str | None # путь до документа
     name: str | None # наименование документа
     _creation_instruction: Callable | None # инструкция для формирования документа
@@ -14,7 +22,13 @@ class ABCDocument(ABC):
 
     @abstractmethod
     def create_document(self, file_name: str, path: str | Path | None) -> None:
-        """Создание документа"""
+        """
+        Создание документа
+
+        Args:
+            file_name (str): Наименование документа
+            path (str | Path | None): Путь формирования документа
+        """
         pass
 
     @abstractmethod
@@ -28,6 +42,12 @@ class ABCDocument(ABC):
         pass
 
     @abstractmethod
-    def run_instruction(self, save_after: bool=True):
+    def run_instruction(self, save_after: bool=True) -> None:
+        """
+        Запуск инструкции формирования документа
+
+        Args:
+            save_after (bool): Сохранить поле выполнения инструкций
+       """
         pass
 

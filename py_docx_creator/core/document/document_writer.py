@@ -20,24 +20,26 @@ if TYPE_CHECKING:
 
 
 class DocumentWriter(ABCDocumentWriter):
-    """Класс для наполнения документа"""
+    """
+    Класс для наполнения документа
+
+    Attributes:
+        document (DocxDocument): Класс документа python-docx
+    """
     document: DocxDocument # alias
 
     def add_paragraph_to_document(self, document: "Document | None" = None) -> Paragraph | None:
-        """Добавление параграфа в документ"""
         return document.document.add_paragraph() if document else self.document.add_paragraph()
 
     @staticmethod
     def add_run_to_paragraph(paragraph: Paragraph, text: str) -> Run | None:
-        """Добавить текст в параграф"""
         return paragraph.add_run(text)
 
     def add_page_break(self, document: "Document | None" = None) -> None:
-        """Добавление разрыва страницы в документ"""
         document.document.add_page_break() if document else self.document.add_page_break()
 
 class FastWriter(DocumentWriter):
-
+    """Класс быстрой записи в документ"""
 
     def write(self,
               target: "Document | Paragraph",
@@ -54,7 +56,26 @@ class FastWriter(DocumentWriter):
               with_leader: bool = False,
               leader_width: float = 6.8
               ) -> Paragraph:
+        """
+        Метод быстрой записи в документ
 
+        Args:
+            target (Document | Paragraph): Цель записи
+            text (str): Записываемый текст
+            paragraph_style (ABCParagraphStyle): Стиль создаваемого параграфа
+            text_style (ABCTextStyle): Стиль записываемого текста
+            size (float | None): Размер шрифта записываемого текста
+            bold (bool | None): Включить ли жирное начертание для записываемого текста
+            italic (bool | None): Включить ли курсивное начертание для записываемого текста
+            underline (bool | None): Включить ли подчеркнутое начертание для записываемого текста
+            space_after (float | None): Размер отступа после созданного параграфа
+            alignment (AlignParagraph | None): Выравнивание для созданного параграфа
+            first_line_indent (float | None): Размер отступа для первой строки (красная строка)
+            with_leader (bool | None): Включить ли заполнение остатка строки табуляцией со знаком '_'
+            leader_width (float): Размер заполняемой табуляцией строки. По умолчанию: 6.8
+        Returns:
+            Paragraph: Созданный параграф
+        """
         # 1. Подготовка стилей (ваша логика без изменений)
         if any(val is not None for val in [bold, italic, underline, size, alignment, first_line_indent, space_after]):
             paragraph_style = copy(paragraph_style)
@@ -91,6 +112,7 @@ class FastWriter(DocumentWriter):
 
 
 class Writer(FastWriter):
+    """Класс писателя"""
     pass
 
 

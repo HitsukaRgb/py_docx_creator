@@ -9,7 +9,7 @@ class ABCParagraphStyle(ABC):
     """
     Стиль форматирования параграфа.
 
-    Атрибуты:
+    Attributes:
         alignment (AlignParagraph | None): Выравнивание текста (влево, по центру, по ширине и т.п.).
         space_after (float | None): Отступ после параграфа.
         space_before (float | None): Отступ перед параграфом.
