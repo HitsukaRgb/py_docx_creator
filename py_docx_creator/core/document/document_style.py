@@ -8,7 +8,7 @@ from docx.text.run import Run
 
 from py_docx_creator.abstract_classes.abc_document.abc_document import ABCDocument
 from py_docx_creator.abstract_classes.abc_document.abc_document_style import ABCDocumentStyle
-from docx import Document as DocxDocument # alias
+from docx import Document as DocxDocument  # alias
 
 
 class DocumentStyle(ABCDocumentStyle):
@@ -55,7 +55,7 @@ class DocumentStyle(ABCDocumentStyle):
                 if value is not None:
                     # проверка необходимости преобразования типа данных
                     if field.name in (
-                    "space_after", "space_before", "left_indent", "right_indent", "first_line_indent"):
+                            "space_after", "space_before", "left_indent", "right_indent", "first_line_indent"):
                         if field.name in ("left_indent", "right_indent"):
                             value = Inches(value)
                         else:

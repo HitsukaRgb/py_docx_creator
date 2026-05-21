@@ -2,7 +2,7 @@ from pathlib import Path
 from typing import Callable, Any
 
 from py_docx_creator.abstract_classes.abc_document.abc_document import ABCDocument
-from docx import Document as DocxDocument # alias
+from docx import Document as DocxDocument  # alias
 
 from py_docx_creator.core.document.document_style import DocumentStyle
 from py_docx_creator.core.document.document_writer import Writer
@@ -17,11 +17,11 @@ class BaseDocument(ABCDocument):
         name (str | None): Наименование документа
         document (DocxDocument): Класс документа python-docx
     """
-    path: Path | str | None = None # путь до документа
-    name: str | None = None # наименование документа
-    _creation_instruction: Callable | None = None # инструкция для формирования документа
-    _instruction_kwargs: dict[str, Any] | None # аргументы инструкция для формирования документа
-    document: DocxDocument # alias
+    path: Path | str | None = None  # путь до документа
+    name: str | None = None  # наименование документа
+    _creation_instruction: Callable | None = None  # инструкция для формирования документа
+    _instruction_kwargs: dict[str, Any] | None  # аргументы инструкция для формирования документа
+    document: DocxDocument  # alias
 
     def __init__(self, file_name: str | Path | None = None):
         if file_name:
@@ -43,7 +43,7 @@ class BaseDocument(ABCDocument):
     def save_document(self):
         self.document.save(self.name)
 
-    def run_instruction(self, save_after: bool=True):
+    def run_instruction(self, save_after: bool = True):
         if self.creation_instruction:
             self.creation_instruction(self, **self._instruction_kwargs)
             if save_after:
@@ -69,6 +69,6 @@ class BaseDocument(ABCDocument):
     def instruction_kwargs(self, value: dict[str | Any] | None) -> None:
         self._instruction_kwargs = value
 
+
 class Document(BaseDocument, Writer, DocumentStyle):
     pass
-

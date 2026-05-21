@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Callable, Any
-from docx import Document as DocxDocument # alias
-
+from docx import Document as DocxDocument  # alias
 
 
 class ABCDocument(ABC):
@@ -14,11 +13,11 @@ class ABCDocument(ABC):
         name (str | None): Наименование документа
         document (DocxDocument): Класс документа python-docx
     """
-    path: Path | str | None # путь до документа
-    name: str | None # наименование документа
-    _creation_instruction: Callable | None # инструкция для формирования документа
-    _instruction_kwargs: dict[str, Any] | None # аргументы инструкция для формирования документа
-    document: DocxDocument # alias
+    path: Path | str | None  # путь до документа
+    name: str | None  # наименование документа
+    _creation_instruction: Callable | None  # инструкция для формирования документа
+    _instruction_kwargs: dict[str, Any] | None  # аргументы инструкция для формирования документа
+    document: DocxDocument  # alias
 
     @abstractmethod
     def create_document(self, file_name: str, path: str | Path | None) -> None:
@@ -42,7 +41,7 @@ class ABCDocument(ABC):
         pass
 
     @abstractmethod
-    def run_instruction(self, save_after: bool=True) -> None:
+    def run_instruction(self, save_after: bool = True) -> None:
         """
         Запуск инструкции формирования документа
 
@@ -50,4 +49,3 @@ class ABCDocument(ABC):
             save_after (bool): Сохранить поле выполнения инструкций
        """
         pass
-

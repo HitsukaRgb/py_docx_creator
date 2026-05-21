@@ -12,9 +12,10 @@ from py_docx_creator.abstract_classes.abc_style_dataclasses.abc_paragraph_style 
 from py_docx_creator.abstract_classes.abc_style_dataclasses.abc_text_style import ABCTextStyle
 from py_docx_creator.core.document.document_style import DocumentStyle
 from py_docx_creator.enums.enum_align_paragraph import AlignParagraph
-from docx import Document as DocxDocument # alias
+from docx import Document as DocxDocument  # alias
 
 from typing import TYPE_CHECKING
+
 if TYPE_CHECKING:
     from py_docx_creator.core.document.document import Document
 
@@ -26,7 +27,7 @@ class DocumentWriter(ABCDocumentWriter):
     Attributes:
         document (DocxDocument): Класс документа python-docx
     """
-    document: DocxDocument # alias
+    document: DocxDocument  # alias
 
     def add_paragraph_to_document(self, document: "Document | None" = None) -> Paragraph | None:
         return document.document.add_paragraph() if document else self.document.add_paragraph()
@@ -37,6 +38,7 @@ class DocumentWriter(ABCDocumentWriter):
 
     def add_page_break(self, document: "Document | None" = None) -> None:
         document.document.add_page_break() if document else self.document.add_page_break()
+
 
 class FastWriter(DocumentWriter):
     """Класс быстрой записи в документ"""
@@ -76,7 +78,6 @@ class FastWriter(DocumentWriter):
         Returns:
             Paragraph: Созданный параграф
         """
-        # 1. Подготовка стилей (ваша логика без изменений)
         if any(val is not None for val in [bold, italic, underline, size, alignment, first_line_indent, space_after]):
             paragraph_style = copy(paragraph_style)
             text_style = copy(text_style)
@@ -114,12 +115,3 @@ class FastWriter(DocumentWriter):
 class Writer(FastWriter):
     """Класс писателя"""
     pass
-
-
-
-
-
-
-
-
-

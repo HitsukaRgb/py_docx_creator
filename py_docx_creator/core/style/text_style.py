@@ -3,6 +3,7 @@ from dataclasses import dataclass
 
 from py_docx_creator.abstract_classes.abc_style_dataclasses.abc_text_style import ABCTextStyle
 
+
 @dataclass
 class TextStyle(ABCTextStyle):
     """
@@ -21,4 +22,3 @@ class TextStyle(ABCTextStyle):
     bold: bool | None = None  # жирное начертание шрифта
     italic: bool | None = None  # курсивное начертание шрифта
     underline: bool | None = None  # подчеркнутое начертание шрифта
-

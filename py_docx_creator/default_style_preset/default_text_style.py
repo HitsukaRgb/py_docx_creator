@@ -32,4 +32,3 @@ class DefaultHeaderTextStyle(TextStyle):
     size: float = 12.0
     name: str = FontNames.TimesNewRoman.value
     bold: bool = True
-

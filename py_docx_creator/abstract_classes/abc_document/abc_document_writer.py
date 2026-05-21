@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from docx import Document as DocxDocument # alias
+from docx import Document as DocxDocument  # alias
 from docx.text.paragraph import Paragraph
 from docx.text.run import Run
 

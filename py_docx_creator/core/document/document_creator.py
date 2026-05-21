@@ -19,8 +19,7 @@ class DocumentCreator(ABCDocumentCreator):
                 if document.name == document_name:
                     del self.documents[index_document]
 
-
-    def start_creating_documents(self, save_after: bool=True):
+    def start_creating_documents(self, save_after: bool = True):
         # todo: Реализовать многопоточный подход
         for document in self.documents:
             document.run_instruction(save_after)
@@ -32,4 +31,3 @@ class DocumentCreator(ABCDocumentCreator):
     @documents.setter
     def documents(self, value: list[Document]):
         self._documents = value
-

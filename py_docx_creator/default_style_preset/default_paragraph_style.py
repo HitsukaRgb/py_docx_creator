@@ -18,6 +18,7 @@ class DefaultHeaderParagraphStyle(ParagraphStyle):
     left_indent: float = -0.5
     right_indent: float = -0.5
 
+
 @dataclass
 class DefaultMainParagraphStyle(ParagraphStyle):
     """
