@@ -46,6 +46,9 @@ class DocumentStyle(ABCDocumentStyle):
                     # проверка необходимости преобразования типа данных
                     if field.name in ("size",):
                         value = Pt(value)
+                    elif field.name in ("name",):
+                        # Получение значения из Enum для названия шрифта
+                        value = value.value
                     setattr(target.font, field.name, value)
 
         elif isinstance(target, Paragraph):
@@ -60,8 +63,8 @@ class DocumentStyle(ABCDocumentStyle):
                             value = Inches(value)
                         else:
                             value = Pt(value)
-                    elif field.name in ("alignment", "name"):
-                        # Получение значения из Enum для шрифтов и выравнивания
+                    elif field.name in ("alignment",):
+                        # Получение значения из Enum для выравнивания
                         value = value.value
 
                     setattr(paragraph_style, field.name, value)
