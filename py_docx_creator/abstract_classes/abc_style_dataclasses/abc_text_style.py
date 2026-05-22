@@ -1,5 +1,5 @@
+from abc import ABC
 from dataclasses import dataclass
-from abc import ABC, abstractmethod
 
 
 @dataclass
@@ -15,8 +15,8 @@ class ABCTextStyle(ABC):
         underline ( bool | None): Подчеркнутое начертание шрифта
     """
 
-    size: float | None  # размер шрифта
-    name: str | None  # наименование шрифта
-    bold: bool | None  # жирное начертание шрифта
-    italic: bool | None  # курсивное начертание шрифта
-    underline: bool | None  # подчеркнутое начертание шрифта
+    size: float | None
+    name: str | None
+    bold: bool | None
+    italic: bool | None
+    underline: bool | None

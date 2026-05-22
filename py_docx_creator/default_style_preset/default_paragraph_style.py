@@ -14,7 +14,7 @@ class DefaultHeaderParagraphStyle(ParagraphStyle):
         left_indent (float | None): Отступ от левого края страницы = -0.5
         right_indent (float | None): Отступ от правого края страницы = -0.5
     """
-    alignment: AlignParagraph = AlignParagraph.CENTER.value
+    alignment: AlignParagraph = AlignParagraph.CENTER
     left_indent: float = -0.5
     right_indent: float = -0.5
 
@@ -32,7 +32,7 @@ class DefaultMainParagraphStyle(ParagraphStyle):
         line_spacing (float | None): Межстрочный интервал = 1.15
         first_line_indent (float | None): Отступ первой строки (красная строка) = 20
     """
-    alignment: AlignParagraph | None = AlignParagraph.JUSTIFY.value
+    alignment: AlignParagraph | None = AlignParagraph.JUSTIFY
     space_after: float | None = 0.0
     left_indent: float | None = -0.5
     right_indent: float | None = -0.5

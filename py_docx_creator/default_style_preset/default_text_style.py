@@ -15,7 +15,7 @@ class DefaultMainTextStyle(TextStyle):
         bold ( bool | None): Жирное начертание шрифта = False
     """
     size: float = 10.0
-    name: str = FontNames.TimesNewRoman.value
+    name: str = FontNames.TimesNewRoman
     bold: bool = False
 
 
@@ -30,5 +30,5 @@ class DefaultHeaderTextStyle(TextStyle):
         bold ( bool | None): Жирное начертание шрифта = True
     """
     size: float = 12.0
-    name: str = FontNames.TimesNewRoman.value
+    name: str = FontNames.TimesNewRoman
     bold: bool = True

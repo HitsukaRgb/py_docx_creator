@@ -5,6 +5,7 @@ from docx.text.paragraph import Paragraph
 from docx.text.run import Run
 
 from py_docx_creator.abstract_classes.abc_document.abc_document import ABCDocument
+from py_docx_creator.abstract_classes.abc_document.abc_paragraph_builder import ABCParagraphBuilder
 
 
 class ABCDocumentWriter(ABC):
@@ -54,5 +55,14 @@ class ABCDocumentWriter(ABC):
         Args:
             document (ABCDocument): Документ для добавления разрыва страницы
 
+        """
+        pass
+
+    def paragraph(self, text: str | None) -> ABCParagraphBuilder:
+        """
+        Добавление разрыва страницы в документ
+
+        Args:
+            text (str | None): Записываемый в документ текст
         """
         pass

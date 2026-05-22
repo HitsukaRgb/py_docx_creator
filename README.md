@@ -32,6 +32,28 @@ pip install py_docx_creator
 
 ## Базовый пример использования
 
+### Классическая запись в стиле `python-docx`
+
+```python
+
+from py_docx_creator.core.document.document import Document
+
+text = "Пример классической записи"
+
+document = Document()
+document.create_document("Документ.docx")
+paragraph = document.add_paragraph_to_document(document)
+run = document.add_run_to_paragraph(paragraph, text)
+document.save_document()
+
+```
+
+### Быстрая запись
+
+Реализована быстрая запись с помощью метода `write`. При такой записи момент создания параграфа и наполнение run-а пропускается.
+Стили в свою очередь для параграфа и текста в нем определяются классами стилей. В данном примере используются стандартные классы стилей
+`DefaultHeaderParagraphStyle` для параграфа и `DefaultHeaderTextStyle` для текста в нем.
+
 ```python
 
 from py_docx_creator.core.document.document import Document
@@ -40,10 +62,28 @@ from py_docx_creator.default_style_preset.default_text_style import DefaultHeade
 
 document = Document()
 document.create_document("Документ.docx")
-document.write(document, "Базовый пример использования", paragraph_style=DefaultHeaderParagraphStyle, text_style=DefaultHeaderTextStyle)
+document.write(document, "Пример быстрой записи", paragraph_style=DefaultHeaderParagraphStyle, text_style=DefaultHeaderTextStyle)
 document.save_document()
 
 ```
+
+### Fluent запись
+
+Реализована возможность записи в стиле `Fluent` где последовательно описываются стили записываемого параграфа и текста. 
+При таком подходе каждая запись оканчивается методом `.add()` который записывает параграф в документ с заданным текстом и возвращает картеж из записанного параграфа и run-a (`tuple[Paragraph, Run]`).
+
+```python
+
+from py_docx_creator.core.document.document import Document
+
+document = Document()
+document.create_document("Документ.docx")
+document.paragraph("Пример Fluent записи").size(32).bold(True).italic(True).line_spacing(12).alignment(AlignParagraph.CENTER).add()
+document.save_document()
+
+```
+
+### Конвейерное создание документов
 
 Предусмотрена возможность прописать шаги формирования документа в отдельной функции типа `Callable`. Аргументы такой функции задаются в отдельном поле класса `Document`.
 
@@ -58,12 +98,18 @@ from py_docx_creator.default_style_preset.default_text_style import DefaultHeade
 def instruction(doc: Document, **kwargs):
     file_name = kwargs.get("name", "document.docx")
     doc.create_document(file_name)
-    doc.write(doc, "Базовый пример использования", paragraph_style=DefaultHeaderParagraphStyle, text_style=DefaultHeaderTextStyle)
+    # Классическая запись
+    paragraph = doc.add_paragraph_to_document(doc)
+    run = doc.add_run_to_paragraph(paragraph, "Пример классической записи")
+    # Быстрая запись
+    doc.write(doc, "Пример быстрой записи", paragraph_style=DefaultHeaderParagraphStyle, text_style=DefaultHeaderTextStyle)
+    # Fluent запись
+    doc.paragraph("Пример Fluent записи").italic(True).size(18).first_line_indent(30).space_after(30).add()
 
 document = Document()
 document.create_document("Документ.docx")
 document.creation_instruction = instruction # инструкция по формированию документа
-document.instruction_kwargs = {"name": "Базовый пример использования.docx"} # аргументы выполняемой функции
+document.instruction_kwargs = {"name": "Конвейерное создание документов.docx"} # аргументы выполняемой функции
 document.run_instruction(save_after=True) # запуск формирования документа 
 
 ```
@@ -80,7 +126,13 @@ from py_docx_creator.default_style_preset.default_text_style import DefaultHeade
 def instruction(doc: Document, **kwargs):
     file_name = kwargs.get("name", "document.docx")
     doc.create_document(file_name)
-    doc.write(doc, "Базовый пример использования", paragraph_style=DefaultHeaderParagraphStyle, text_style=DefaultHeaderTextStyle)
+    # Классическая запись
+    paragraph = doc.add_paragraph_to_document(doc)
+    run = doc.add_run_to_paragraph(paragraph, "Пример классической записи")
+    # Быстрая запись
+    doc.write(doc, "Пример быстрой записи", paragraph_style=DefaultHeaderParagraphStyle, text_style=DefaultHeaderTextStyle)
+    # Fluent запись
+    doc.paragraph("Пример Fluent записи").italic(True).size(18).first_line_indent(30).space_after(30).add()
 
 document_creator = DocumentCreator()
 for i in range(5): # имитация конвейера
@@ -123,7 +175,7 @@ class MyTextStyle(DefaultHeaderTextStyle): # Стиль текста
     size = 24
 
 class MyParagraphStyle(DefaultHeaderParagraphStyle): # Стиль параграфа
-    alignment = AlignParagraph.LEFT.value
+    alignment = AlignParagraph.LEFT
 
 class MyPageStyle(DefaultPageStyle): # Стиль страницы
     left_margin = 200.0
@@ -165,12 +217,14 @@ document.write(document, "Базовый пример использования
                text_style=DefaultHeaderTextStyle,
                size=12,
                bold=True,
-               alignment=AlignParagraph.RIGHT # !!! без .value !!!
+               alignment=AlignParagraph.RIGHT
                ...
                )
 
 ```
+
 или же:
+
 ```python
 
 write_config = {

@@ -1,9 +1,10 @@
 from pathlib import Path
 from typing import Callable, Any
 
-from py_docx_creator.abstract_classes.abc_document.abc_document import ABCDocument
 from docx import Document as DocxDocument  # alias
 
+from py_docx_creator.abstract_classes.abc_document.abc_document import ABCDocument
+from py_docx_creator.core.document.builder import Builder
 from py_docx_creator.core.document.document_style import DocumentStyle
 from py_docx_creator.core.document.document_writer import Writer
 
@@ -71,4 +72,19 @@ class BaseDocument(ABCDocument):
 
 
 class Document(BaseDocument, Writer, DocumentStyle):
-    pass
+
+    def paragraph(self, text) -> Builder:
+        """
+        Создание параграфа для fluent записи
+
+        Args:
+            text (str): Записываемый текст
+
+        Returns:
+            Builder: Класс стилизации параграфа и текста
+
+        """
+        builder = Builder()
+        builder.document = self
+        builder.text = text
+        return builder

@@ -60,4 +60,8 @@ class DocumentStyle(ABCDocumentStyle):
                             value = Inches(value)
                         else:
                             value = Pt(value)
+                    elif field.name in ("alignment", "name"):
+                        # Получение значения из Enum для шрифтов и выравнивания
+                        value = value.value
+
                     setattr(paragraph_style, field.name, value)
