@@ -23,12 +23,12 @@ class Builder(ParagraphBuilder, TextStyleBuilder):
     _text: str
 
     @property
-    def document(self):
+    def document(self) -> "Document":
         """Документ для записи"""
         return self._document
 
     @document.setter
-    def document(self, document):
+    def document(self, document) -> None:
         """
         Установка документа для записи
 
@@ -39,12 +39,12 @@ class Builder(ParagraphBuilder, TextStyleBuilder):
         self._document = document
 
     @property
-    def text(self):
+    def text(self) -> str:
         """Записываемый текст"""
         return self._text
 
     @text.setter
-    def text(self, text):
+    def text(self, text) -> None:
         """
         Установка записываемого текста
 

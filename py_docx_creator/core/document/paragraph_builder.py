@@ -16,7 +16,7 @@ class ParagraphBuilder(ABCParagraphBuilder):
     _page_break_before: bool | None = None
 
     @property
-    def paragraph_style(self):
+    def paragraph_style(self) -> ParagraphStyle:
         return ParagraphStyle(
             alignment=self._alignment,
             space_after=self._space_after,

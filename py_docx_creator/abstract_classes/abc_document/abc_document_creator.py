@@ -1,11 +1,20 @@
 from abc import ABC, abstractmethod
+from queue import Queue
+
 from py_docx_creator.abstract_classes.abc_document.abc_document import ABCDocument
 
 
 class ABCDocumentCreator(ABC):
-    """Абстрактный класс для конвейерного формирования документов"""
+    """
+    Абстрактный класс для конвейерного формирования документов
 
-    _documents: list[ABCDocument] | None
+    Attributes:
+        _documents (Queue): Очередь документов для формирования
+        _chunk_size (int): Размер чанка очереди (количество одновременно выполняемых потоков)
+    """
+
+    _documents: dict[str | ABCDocument] | None
+    _chunk_size: int | None
 
     @abstractmethod
     def add_document(self, document: ABCDocument) -> None:
@@ -30,4 +39,15 @@ class ABCDocumentCreator(ABC):
     @abstractmethod
     def start_creating_documents(self) -> None:
         """Запуск процесса формирования документов"""
+        pass
+
+    @property
+    @abstractmethod
+    def chunk_size(self) -> int:
+        """Размер чанка очереди (количество одновременно выполняемых потоков)"""
+        pass
+
+    @chunk_size.setter
+    @abstractmethod
+    def chunk_size(self, value: int) -> None:
         pass

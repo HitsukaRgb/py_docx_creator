@@ -107,10 +107,9 @@ def instruction(doc: Document, **kwargs):
     doc.paragraph("Пример Fluent записи").italic(True).size(18).first_line_indent(30).space_after(30).add()
 
 document = Document()
-document.create_document("Документ.docx")
 document.creation_instruction = instruction # инструкция по формированию документа
 document.instruction_kwargs = {"name": "Конвейерное создание документов.docx"} # аргументы выполняемой функции
-document.run_instruction(save_after=True) # запуск формирования документа 
+document.run_instruction() # запуск формирования документа 
 
 ```
 
@@ -123,25 +122,28 @@ from py_docx_creator.core.document.document_creator import DocumentCreator
 from py_docx_creator.default_style_preset.default_paragraph_style import DefaultHeaderParagraphStyle
 from py_docx_creator.default_style_preset.default_text_style import DefaultHeaderTextStyle
 
+
 def instruction(doc: Document, **kwargs):
     file_name = kwargs.get("name", "document.docx")
-    doc.create_document(file_name)
     # Классическая запись
     paragraph = doc.add_paragraph_to_document(doc)
-    run = doc.add_run_to_paragraph(paragraph, "Пример классической записи")
+    run = doc.add_run_to_paragraph(paragraph, f"{file_name} - Пример классической записи")
     # Быстрая запись
-    doc.write(doc, "Пример быстрой записи", paragraph_style=DefaultHeaderParagraphStyle, text_style=DefaultHeaderTextStyle)
+    doc.write(doc, f"{file_name} - Пример быстрой записи", paragraph_style=DefaultHeaderParagraphStyle,
+              text_style=DefaultHeaderTextStyle)
     # Fluent запись
-    doc.paragraph("Пример Fluent записи").italic(True).size(18).first_line_indent(30).space_after(30).add()
+    doc.paragraph(f"{file_name} - Пример Fluent записи").italic(True).size(18).first_line_indent(30).space_after(30).add()
+    doc.save_document()
 
 document_creator = DocumentCreator()
-for i in range(5): # имитация конвейера
+for i in range(50):  # имитация конвейера
     document: Document = Document()
-    document.creation_instruction = instruction # инструкция по формированию документа
-    document.instruction_kwargs = {"name": f"{i}.docx"} # аргументы выполняемой функции (в данном случае отличные друг от друга имена файлов)
-    document_creator.add_document(document) # список экземпляров `Document` готовых к формированию
+    document.create_document(f"{i}.docx")
+    document.creation_instruction = instruction  # инструкция по формированию документа
+    document.instruction_kwargs = {"name": f"{i}.docx"}  # аргументы выполняемой функции
+    document_creator.add_document(document)  # список экземпляров `Document` готовых к формированию
 
-document_creator.start_creating_documents(save_after=True) # запуск формирования всех документов
+document_creator.start_creating_documents()  # запуск формирования всех документов
 
 ```
 

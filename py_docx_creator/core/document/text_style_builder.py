@@ -32,7 +32,7 @@ class TextStyleBuilder(ABCTextStyleBuilder):
         return self
 
     @property
-    def text_style(self):
+    def text_style(self) -> TextStyle:
         return TextStyle(
             size=self._size,
             name=self._name,

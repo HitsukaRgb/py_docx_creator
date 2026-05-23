@@ -41,11 +41,8 @@ class ABCDocument(ABC):
         pass
 
     @abstractmethod
-    def run_instruction(self, save_after: bool = True) -> None:
+    def run_instruction(self) -> None:
         """
         Запуск инструкции формирования документа
-
-        Args:
-            save_after (bool): Сохранить поле выполнения инструкций
        """
         pass

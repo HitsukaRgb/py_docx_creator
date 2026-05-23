@@ -37,18 +37,18 @@ class BaseDocument(ABCDocument):
         self.name = file_name
         if not path and self.path is None:
             self.path = Path.cwd()
+        else:
+            self.path = Path.joinpath(path, file_name)
 
     def load_document(self):
         self.document = DocxDocument(self.path or self.name)
 
     def save_document(self):
-        self.document.save(self.name)
+        self.document.save(self.path)
 
-    def run_instruction(self, save_after: bool = True):
+    def run_instruction(self):
         if self.creation_instruction:
             self.creation_instruction(self, **self._instruction_kwargs)
-            if save_after:
-                self.save_document()
         else:
             raise Exception("Инструкция не задана!")
 
