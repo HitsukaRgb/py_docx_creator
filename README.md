@@ -97,16 +97,18 @@ from py_docx_creator.default_style_preset.default_text_style import DefaultHeade
 
 def instruction(doc: Document, **kwargs):
     file_name = kwargs.get("name", "document.docx")
-    doc.create_document(file_name)
+    doc.name = file_name
     # Классическая запись
     paragraph = doc.add_paragraph_to_document(doc)
-    run = doc.add_run_to_paragraph(paragraph, "Пример классической записи")
+    run = doc.add_run_to_paragraph(paragraph, f"{file_name} - Пример классической записи")
     # Быстрая запись
-    doc.write(doc, "Пример быстрой записи", paragraph_style=DefaultHeaderParagraphStyle, text_style=DefaultHeaderTextStyle)
+    doc.write(doc, f"{file_name} - Пример быстрой записи", paragraph_style=DefaultHeaderParagraphStyle, text_style=DefaultHeaderTextStyle)
     # Fluent запись
-    doc.paragraph("Пример Fluent записи").italic(True).size(18).first_line_indent(30).space_after(30).add()
+    doc.paragraph(f"{file_name} - Пример Fluent записи").italic(True).size(18).first_line_indent(30).space_after(30).add()
+    doc.save_document()
 
 document = Document()
+document.create_document("document.docx")
 document.creation_instruction = instruction # инструкция по формированию документа
 document.instruction_kwargs = {"name": "Конвейерное создание документов.docx"} # аргументы выполняемой функции
 document.run_instruction() # запуск формирования документа 
@@ -129,8 +131,7 @@ def instruction(doc: Document, **kwargs):
     paragraph = doc.add_paragraph_to_document(doc)
     run = doc.add_run_to_paragraph(paragraph, f"{file_name} - Пример классической записи")
     # Быстрая запись
-    doc.write(doc, f"{file_name} - Пример быстрой записи", paragraph_style=DefaultHeaderParagraphStyle,
-              text_style=DefaultHeaderTextStyle)
+    doc.write(doc, f"{file_name} - Пример быстрой записи", paragraph_style=DefaultHeaderParagraphStyle, text_style=DefaultHeaderTextStyle)
     # Fluent запись
     doc.paragraph(f"{file_name} - Пример Fluent записи").italic(True).size(18).first_line_indent(30).space_after(30).add()
     doc.save_document()
