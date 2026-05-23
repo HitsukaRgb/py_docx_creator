@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from queue import Queue
 
 from py_docx_creator.abstract_classes.abc_document.abc_document import ABCDocument
 
@@ -9,7 +8,7 @@ class ABCDocumentCreator(ABC):
     Абстрактный класс для конвейерного формирования документов
 
     Attributes:
-        _documents (Queue): Очередь документов для формирования
+        _documents (dict[str | ABCDocument]): Очередь документов для формирования
         _chunk_size (int): Размер чанка очереди (количество одновременно выполняемых потоков)
     """
 
