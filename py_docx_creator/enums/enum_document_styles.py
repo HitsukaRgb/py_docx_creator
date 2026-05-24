@@ -6,6 +6,7 @@ class DocumentStyles(Enum):
     Перечень стилей документа
 
     Attributes:
-        Normal: Стандартный стиль документа
+        NORMAL: Стандартный стиль документа
     """
-    Normal = "Normal"
+
+    NORMAL = "Normal"

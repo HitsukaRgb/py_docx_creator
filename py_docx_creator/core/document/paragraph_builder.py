@@ -1,6 +1,8 @@
 from typing import Self
 
-from py_docx_creator.abstract_classes.abc_document.abc_paragraph_builder import ABCParagraphBuilder
+from py_docx_creator.abstract_classes.abc_document.abc_paragraph_builder import (
+    ABCParagraphBuilder,
+)
 from py_docx_creator.core.style.paragraph_style import ParagraphStyle
 from py_docx_creator.enums.enum_align_paragraph import AlignParagraph
 

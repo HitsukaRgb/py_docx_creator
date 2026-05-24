@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import Self
 
-from py_docx_creator.abstract_classes.abc_style_dataclasses.abc_paragraph_style import ABCParagraphStyle
+from py_docx_creator.abstract_classes.abc_style_dataclasses.abc_paragraph_style import (
+    ABCParagraphStyle,
+)
 from py_docx_creator.enums.enum_align_paragraph import AlignParagraph
 
 
@@ -19,6 +21,7 @@ class ABCParagraphBuilder(ABC):
         _first_line_indent (float | None): Отступ первой строки (красная строка).
         _page_break_before (bool | None): Разрыв страницы перед параграфом.
     """
+
     _text: str | None
     _alignment: AlignParagraph | None
     _space_after: float | None

@@ -1,7 +1,8 @@
-from copy import deepcopy
 from dataclasses import dataclass
 
-from py_docx_creator.abstract_classes.abc_style_dataclasses.abc_text_style import ABCTextStyle
+from py_docx_creator.abstract_classes.abc_style_dataclasses.abc_text_style import (
+    ABCTextStyle,
+)
 
 
 @dataclass

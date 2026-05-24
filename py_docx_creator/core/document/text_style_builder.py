@@ -1,6 +1,8 @@
 from typing import Self
 
-from py_docx_creator.abstract_classes.abc_document.abc_text_style_builder import ABCTextStyleBuilder
+from py_docx_creator.abstract_classes.abc_document.abc_text_style_builder import (
+    ABCTextStyleBuilder,
+)
 from py_docx_creator.core.style.text_style import TextStyle
 
 

@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 
-from py_docx_creator.abstract_classes.abc_style_dataclasses.abc_paragraph_style import ABCParagraphStyle
+from py_docx_creator.abstract_classes.abc_style_dataclasses.abc_paragraph_style import (
+    ABCParagraphStyle,
+)
 from py_docx_creator.enums.enum_align_paragraph import AlignParagraph
 
 

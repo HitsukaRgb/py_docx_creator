@@ -1,6 +1,8 @@
 from concurrent.futures import ThreadPoolExecutor
 
-from py_docx_creator.abstract_classes.abc_document.abc_document_creator import ABCDocumentCreator
+from py_docx_creator.abstract_classes.abc_document.abc_document_creator import (
+    ABCDocumentCreator,
+)
 from py_docx_creator.core.document.document import Document
 
 

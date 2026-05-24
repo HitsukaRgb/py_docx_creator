@@ -6,6 +6,7 @@ class FontNames(Enum):
     Перечень наименований шрифтов
 
     Attributes:
-        TimesNewRoman: Шрифт TimesNewRoman
+        TIMES_NEW_ROMAN: Шрифт TimesNewRoman
     """
-    TimesNewRoman = "Times New Roman"
+
+    TIMES_NEW_ROMAN = "Times New Roman"

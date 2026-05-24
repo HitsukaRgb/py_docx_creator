@@ -18,19 +18,30 @@ class BaseDocument(ABCDocument):
         name (str | None): Наименование документа
         document (DocxDocument): Класс документа python-docx
     """
+
     path: Path | str | None = None  # путь до документа
     name: str | None = None  # наименование документа
-    _creation_instruction: Callable | None = None  # инструкция для формирования документа
-    _instruction_kwargs: dict[str, Any] | None  # аргументы инструкция для формирования документа
+    _creation_instruction: Callable | None = (
+        None  # инструкция для формирования документа
+    )
+    _instruction_kwargs: (
+        dict[str, Any] | None
+    )  # аргументы инструкция для формирования документа
     document: DocxDocument  # alias
 
     def __init__(self, file_name: str | Path | None = None):
-        if file_name:
+        if file_name is not None:
             path = Path(file_name)
-            if path.exists():
-                if path.name.endswith(".docx") and not path.name.startswith("~"):
-                    self.path = path
-                    self.name = path.name
+            if all(
+                [
+                    not path.name.startswith("~"),  # не временный файл
+                    path.name.endswith(".docx"),  # подходящий формат
+                    path.exists(),  # существует
+                ]
+            ):
+                self.path = path
+                self.name = path.name
+                self.load_document()
 
     def create_document(self, file_name, path: str | Path | None = None):
         self.document = DocxDocument()
@@ -72,7 +83,6 @@ class BaseDocument(ABCDocument):
 
 
 class Document(BaseDocument, Writer, DocumentStyle):
-
     def paragraph(self, text) -> Builder:
         """
         Создание параграфа для fluent записи

@@ -1,4 +1,4 @@
-from typing import TypeVar, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from docx.text.paragraph import Paragraph
 from docx.text.run import Run
@@ -19,6 +19,7 @@ class Builder(ParagraphBuilder, TextStyleBuilder):
         _text (str): Записываемый текст
 
     """
+
     _document: "Document"
     _text: str
 

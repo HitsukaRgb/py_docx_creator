@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 
-from py_docx_creator.abstract_classes.abc_style_dataclasses.abc_page_style import ABCPageStyle
+from py_docx_creator.abstract_classes.abc_style_dataclasses.abc_page_style import (
+    ABCPageStyle,
+)
 
 
 @dataclass

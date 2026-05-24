@@ -1,7 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import Self
 
-from py_docx_creator.abstract_classes.abc_style_dataclasses.abc_text_style import ABCTextStyle
+from py_docx_creator.abstract_classes.abc_style_dataclasses.abc_text_style import (
+    ABCTextStyle,
+)
 
 
 class ABCTextStyleBuilder(ABC):
@@ -15,6 +17,7 @@ class ABCTextStyleBuilder(ABC):
         _italic ( bool | None): Курсивное начертание шрифта
         _underline ( bool | None): Подчеркнутое начертание шрифта
     """
+
     _size: float | None
     _name: str | None
     _bold: bool | None

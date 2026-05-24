@@ -11,11 +11,12 @@ class DefaultMainTextStyle(TextStyle):
 
     Attributes:
         size ( float | None): Размер шрифта = 10.0
-        name ( str | None): Наименование шрифта = TimesNewRoman
+        name ( str | None): Наименование шрифта = TIMES_NEW_ROMAN
         bold ( bool | None): Жирное начертание шрифта = False
     """
+
     size: float = 10.0
-    name: str = FontNames.TimesNewRoman
+    name: str = FontNames.TIMES_NEW_ROMAN
     bold: bool = False
 
 
@@ -26,9 +27,10 @@ class DefaultHeaderTextStyle(TextStyle):
 
     Attributes:
         size ( float | None): Размер шрифта = 12.0
-        name ( str | None): Наименование шрифта = TimesNewRoman
+        name ( str | None): Наименование шрифта = TIMES_NEW_ROMAN
         bold ( bool | None): Жирное начертание шрифта = True
     """
+
     size: float = 12.0
-    name: str = FontNames.TimesNewRoman
+    name: str = FontNames.TIMES_NEW_ROMAN
     bold: bool = True

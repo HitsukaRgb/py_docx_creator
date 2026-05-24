@@ -18,6 +18,7 @@ class AlignParagraph(Enum):
         JUSTIFY_LOW (WD_ALIGN_PARAGRAPH): По ширине с малым интервалом.
         THAI_JUSTIFY (WD_ALIGN_PARAGRAPH): Тайское выравнивание по ширине.
     """
+
     LEFT: WD_ALIGN_PARAGRAPH = WD_ALIGN_PARAGRAPH.LEFT
     CENTER: WD_ALIGN_PARAGRAPH = WD_ALIGN_PARAGRAPH.CENTER
     RIGHT: WD_ALIGN_PARAGRAPH = WD_ALIGN_PARAGRAPH.RIGHT

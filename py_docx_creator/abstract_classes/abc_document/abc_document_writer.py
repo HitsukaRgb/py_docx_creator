@@ -5,7 +5,9 @@ from docx.text.paragraph import Paragraph
 from docx.text.run import Run
 
 from py_docx_creator.abstract_classes.abc_document.abc_document import ABCDocument
-from py_docx_creator.abstract_classes.abc_document.abc_paragraph_builder import ABCParagraphBuilder
+from py_docx_creator.abstract_classes.abc_document.abc_paragraph_builder import (
+    ABCParagraphBuilder,
+)
 
 
 class ABCDocumentWriter(ABC):

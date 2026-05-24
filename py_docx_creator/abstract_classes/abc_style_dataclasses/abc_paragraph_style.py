@@ -19,6 +19,7 @@ class ABCParagraphStyle(ABC):
         first_line_indent (float | None): Отступ первой строки (красная строка).
         page_break_before (bool | None): Разрыв страницы перед параграфом.
     """
+
     alignment: AlignParagraph | None  # выравнивание
     space_after: float | None  # отступ до параграфа
     space_before: float | None  # отступ после параграфа

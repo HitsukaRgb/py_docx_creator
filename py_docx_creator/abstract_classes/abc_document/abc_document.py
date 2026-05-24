@@ -13,10 +13,13 @@ class ABCDocument(ABC):
         name (str | None): Наименование документа
         document (DocxDocument): Класс документа python-docx
     """
+
     path: Path | str | None  # путь до документа
     name: str | None  # наименование документа
     _creation_instruction: Callable | None  # инструкция для формирования документа
-    _instruction_kwargs: dict[str, Any] | None  # аргументы инструкция для формирования документа
+    _instruction_kwargs: (
+        dict[str, Any] | None
+    )  # аргументы инструкция для формирования документа
     document: DocxDocument  # alias
 
     @abstractmethod
@@ -44,5 +47,5 @@ class ABCDocument(ABC):
     def run_instruction(self) -> None:
         """
         Запуск инструкции формирования документа
-       """
+        """
         pass

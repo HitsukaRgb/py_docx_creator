@@ -26,14 +26,53 @@ class ABCDocumentStyle(ABC):
         """
         pass
 
-    @staticmethod
+    @classmethod
     @abstractmethod
-    def apply_style(target: ABCDocument | Run | Paragraph, style: Any) -> None:
+    def apply_style(cls, target: Any, style: Any) -> None:
         """
         Применение стиля к передаваемому объекту
 
         Args:
             target (ABCDocument | Run | Paragraph): Цель применения стиля
             style (Any): Применяемый стиль
+        """
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def _apply_page_style(target: ABCDocument, style: Any) -> None:
+        """
+        Применение стиля к страницам документа
+
+        Args:
+            target (ABCDocument): Цель применения стиля
+            style (Any): Применяемый стиль
+
+        """
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def _apply_paragraph_style(target: Paragraph, style: Any) -> None:
+        """
+        Применение стиля к параграфу
+
+        Args:
+            target (Paragraph): Цель применения стиля
+            style (Any): Применяемый стиль
+
+        """
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def _apply_run_style(target: Run, style: Any) -> None:
+        """
+        Применение стиля к run-у
+
+        Args:
+            target (Run): Цель применения стиля
+            style (Any): Применяемый стиль
+
         """
         pass
