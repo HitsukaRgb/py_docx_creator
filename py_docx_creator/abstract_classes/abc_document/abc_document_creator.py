@@ -9,7 +9,7 @@ class ABCDocumentCreator(ABC):
 
     Attributes:
         _documents (dict[str | ABCDocument]): Очередь документов для формирования
-        _chunk_size (int): Размер чанка очереди (количество одновременно выполняемых потоков)
+        _chunk_size (int): Размер чанка очереди (количество одновременно выполняемых потоков и (или) процессов)
     """
 
     _documents: dict[str | ABCDocument] | None
@@ -36,14 +36,23 @@ class ABCDocumentCreator(ABC):
         pass
 
     @abstractmethod
-    def start_creating_documents(self) -> None:
-        """Запуск процесса формирования документов"""
+    def start_creating_documents(
+        self, use_threads: bool = True, use_multiprocess: bool = False
+    ) -> None:
+        """
+        Запуск процесса формирования документов
+
+        Args:
+            use_threads (bool): Использовать потоки потоки (по умолчанию: True)
+            use_multiprocess (bool): Использовать multiprocess (по умолчанию: False)
+
+        """
         pass
 
     @property
     @abstractmethod
     def chunk_size(self) -> int:
-        """Размер чанка очереди (количество одновременно выполняемых потоков)"""
+        """Размер чанка очереди (количество одновременно выполняемых потоков и (или) процессов)"""
         pass
 
     @chunk_size.setter

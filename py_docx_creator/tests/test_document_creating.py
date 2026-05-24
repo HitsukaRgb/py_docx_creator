@@ -19,20 +19,43 @@ class TestDocumentCreating(TestCase):
         document.save_document()
         self.assertIs(Path(directory, self.file_name).exists(), True)
 
-    @temp_dir
-    def test_pipeline_creation_documents(self, directory: Path):
-        """Конвейерное формирование"""
-
+    def _build_pipeline_documents(self, directory: Path) -> DocumentCreator:
         def instruction(doc: Document, **kwargs):
             file_name = kwargs.get("name", None)
             self.assertIsNotNone(file_name)  # Проверка чтения аргументов инструкции
             doc.save_document()
 
         document_creator = DocumentCreator()
-        for i in range(5):
+        for i in range(10):
             document: Document = Document()
             document.create_document(f"{i}.docx", path=directory)
             document.creation_instruction = instruction
             document.instruction_kwargs = {"name": f"{i}.docx"}
             document_creator.add_document(document)
-        document_creator.start_creating_documents()
+        return document_creator
+
+    @temp_dir
+    def test_pipeline_creation_documents_with_thread(self, directory: Path):
+        """Тестирование формирования в потоках"""
+        document_creator = self._build_pipeline_documents(directory)
+        document_creator.start_creating_documents(
+            use_threads=True, use_multiprocess=False
+        )
+
+    @temp_dir
+    def test_pipeline_creation_documents_with_multiprocess(self, directory: Path):
+        """Тестирование формирования в процессах"""
+        document_creator = self._build_pipeline_documents(directory)
+        document_creator.start_creating_documents(
+            use_threads=False, use_multiprocess=True
+        )
+
+    @temp_dir
+    def test_pipeline_creation_documents_with_multiprocess_and_threads(
+        self, directory: Path
+    ):
+        """Тестирование формирования в процессах и потоках одновременно"""
+        document_creator = self._build_pipeline_documents(directory)
+        document_creator.start_creating_documents(
+            use_threads=True, use_multiprocess=True
+        )
