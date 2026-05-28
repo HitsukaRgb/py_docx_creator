@@ -29,7 +29,7 @@ class ABCDocumentStyle(ABC):
 
     @classmethod
     @abstractmethod
-    def apply_style(cls, target: ABCDocument | Run | Paragraph, style: Any) -> None:
+    def apply_style(cls, target: "ABCDocument" | Run | Paragraph, style: Any) -> None:
         """
         Применение стиля к передаваемому объекту
 
