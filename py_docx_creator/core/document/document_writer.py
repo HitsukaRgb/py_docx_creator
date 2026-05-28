@@ -1,12 +1,10 @@
 from copy import copy
-from typing import Type
 
 from docx.enum.text import WD_TAB_LEADER, WD_TAB_ALIGNMENT
 from docx.shared import Inches
 from docx.text.paragraph import Paragraph
 from docx.text.run import Run
 
-from py_docx_creator.abstract_classes.abc_document.abc_document import ABCDocument
 from py_docx_creator.abstract_classes.abc_document.abc_document_writer import (
     ABCDocumentWriter,
 )
@@ -16,6 +14,7 @@ from py_docx_creator.abstract_classes.abc_style_dataclasses.abc_paragraph_style 
 from py_docx_creator.abstract_classes.abc_style_dataclasses.abc_text_style import (
     ABCTextStyle,
 )
+from py_docx_creator.core.document.builder import Builder
 from py_docx_creator.core.document.document_style import DocumentStyle
 from py_docx_creator.enums.enum_align_paragraph import AlignParagraph
 from docx import Document as DocxDocument  # alias
@@ -36,14 +35,11 @@ class DocumentWriter(ABCDocumentWriter):
 
     document: DocxDocument  # alias
 
-    def add_paragraph_to_document(
-        self, document: "Document | None" = None
-    ) -> Paragraph | None:
-        return (
-            document.document.add_paragraph()
-            if document
-            else self.document.add_paragraph()
-        )
+    def __init__(self, document: "Document"):
+        self.document = document
+
+    def add_paragraph_to_document(self, document: "Document") -> Paragraph | None:
+        return document.document.add_paragraph()
 
     @staticmethod
     def add_run_to_paragraph(paragraph: Paragraph, text: str) -> Run | None:
@@ -52,16 +48,12 @@ class DocumentWriter(ABCDocumentWriter):
     def add_page_break(self, document: "Document | None" = None) -> None:
         document.document.add_page_break() if document else self.document.add_page_break()
 
-
-class FastWriter(DocumentWriter):
-    """Класс быстрой записи в документ"""
-
     def write(
         self,
-        target: "Document | Paragraph",
         text: str,
-        paragraph_style: Type[ABCParagraphStyle],
-        text_style: Type[ABCTextStyle],
+        paragraph_style: ABCParagraphStyle | type[ABCParagraphStyle],
+        text_style: ABCTextStyle | type[ABCTextStyle],
+        target: Paragraph | None = None,
         size: float | None = None,
         bold: bool | None = None,
         italic: bool | None = None,
@@ -92,6 +84,8 @@ class FastWriter(DocumentWriter):
         Returns:
             Paragraph: Созданный параграф
         """
+        paragraph = None
+
         if any(
             val is not None
             for val in [
@@ -122,10 +116,9 @@ class FastWriter(DocumentWriter):
             if space_after is not None:
                 paragraph_style.space_after = space_after
 
-        if isinstance(target, ABCDocument):
-            # При передаче документа в качестве цели для записи
-            paragraph = target.add_paragraph_to_document(target)
-        else:
+        if target is None:
+            paragraph = self.document.add_paragraph_to_document()
+        elif isinstance(target, Paragraph):
             # В случае если целью для записи является параграф
             paragraph = target
 
@@ -143,8 +136,17 @@ class FastWriter(DocumentWriter):
         DocumentStyle.apply_style(run, text_style)
         return paragraph
 
+    def paragraph(self, text: str) -> Builder:
+        """
+        Создание параграфа для fluent записи
 
-class Writer(FastWriter):
-    """Класс писателя"""
+        Args:
+            text (str): Записываемый текст
 
-    pass
+        Returns:
+            Builder: Класс стилизации параграфа и текста
+
+        """
+        builder = Builder(self.document)
+        builder.text = text
+        return builder

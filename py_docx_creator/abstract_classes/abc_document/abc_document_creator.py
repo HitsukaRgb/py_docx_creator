@@ -36,9 +36,7 @@ class ABCDocumentCreator(ABC):
         pass
 
     @abstractmethod
-    def start_creating_documents(
-        self, use_threads: bool = True, use_multiprocess: bool = False
-    ) -> None:
+    def start_creating_documents(self, use_threads: bool = True, use_multiprocess: bool = False) -> None:
         """
         Запуск процесса формирования документов
 

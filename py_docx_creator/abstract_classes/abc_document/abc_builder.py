@@ -1,20 +1,16 @@
+from abc import ABC, abstractmethod
 from typing import TYPE_CHECKING
 
 from docx.text.paragraph import Paragraph
 from docx.text.run import Run
 
-from py_docx_creator.abstract_classes.abc_document.abc_builder import ABCBuilder
-
-from py_docx_creator.core.document.paragraph_builder import ParagraphBuilder
-from py_docx_creator.core.document.text_style_builder import TextStyleBuilder
-
 if TYPE_CHECKING:
     from py_docx_creator.abstract_classes.abc_document.abc_document import ABCDocument
 
 
-class Builder(ABCBuilder, ParagraphBuilder, TextStyleBuilder):
+class ABCBuilder(ABC):
     """
-    Класс Builder для "Fluent" стилизации параграфов и текста
+    Абстрактный класс Builder для "Fluent" стилизации параграфов и текста
 
     Attributes:
         _document (Document): Документ для записи
@@ -25,27 +21,41 @@ class Builder(ABCBuilder, ParagraphBuilder, TextStyleBuilder):
     _document: "ABCDocument"
     _text: str
 
-    def __init__(self, document: "ABCDocument"):
-        self.document = document
-
     @property
+    @abstractmethod
     def document(self) -> "ABCDocument":
         """Документ для записи"""
-        return self._document
+        pass
 
     @document.setter
     def document(self, document) -> None:
-        self._document = document
+        """
+        Установка документа для записи
+
+        Args:
+            document (Document): Документ для записи
+
+        """
+        pass
 
     @property
+    @abstractmethod
     def text(self) -> str:
         """Записываемый текст"""
-        return self._text
+        pass
 
     @text.setter
     def text(self, text) -> None:
-        self._text = text
+        """
+        Установка записываемого текста
 
+        Args:
+            text (str): Записываемый текст
+
+        """
+        pass
+
+    @abstractmethod
     def add(self) -> tuple[Paragraph, Run]:
         """
         Commit для завершения записи в стиле "Fluent"
@@ -53,8 +63,4 @@ class Builder(ABCBuilder, ParagraphBuilder, TextStyleBuilder):
         Returns:
             tuple[Paragraph, Run]: Записанные параграф и run
         """
-        paragraph = self.document.add_paragraph_to_document()
-        self.document.apply_style(paragraph, self.paragraph_style)
-        run = self.document.add_run_to_paragraph(paragraph, self.text)
-        self.document.apply_style(run, self.text_style)
-        return paragraph, run
+        pass

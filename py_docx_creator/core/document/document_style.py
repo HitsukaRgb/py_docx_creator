@@ -46,9 +46,7 @@ class DocumentStyle(ABCDocumentStyle):
         elif isinstance(target, Run):
             cls._apply_run_style(target, style)
         else:
-            raise TypeError(
-                f"Неподдерживаемый тип объекта для применения стиля: {type(target)}"
-            )
+            raise TypeError(f"Неподдерживаемый тип объекта для применения стиля: {type(target)}")
 
     @staticmethod
     def _apply_page_style(target: ABCDocument, style: Any):

@@ -31,9 +31,7 @@ class DocumentCreator(ABCDocumentCreator):
         if document_name in self.documents:
             del self.documents[document_name]
 
-    def start_creating_documents(
-        self, use_threads: bool = True, use_multiprocess: bool = False
-    ):
+    def start_creating_documents(self, use_threads: bool = True, use_multiprocess: bool = False):
         if all([use_threads, use_multiprocess]):
             self._start_creating_documents_with_multiprocess_and_threads()
         elif use_threads:
@@ -77,9 +75,7 @@ class DocumentCreator(ABCDocumentCreator):
 
         with Pool(processes=self.chunk_size) as pool:
             for chunk in chunks:
-                pool.apply_async(
-                    self._worker_process_task, args=(self.chunk_size, chunk)
-                )
+                pool.apply_async(self._worker_process_task, args=(self.chunk_size, chunk))
             pool.close()
             pool.join()
 

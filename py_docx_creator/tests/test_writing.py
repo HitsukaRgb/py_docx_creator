@@ -3,6 +3,7 @@ from typing import Callable
 from unittest import TestCase
 
 from py_docx_creator.core.document.document import Document
+from py_docx_creator.enums.enum_align_paragraph import AlignParagraph
 from py_docx_creator.enums.enum_document_styles import DocumentStyles
 from py_docx_creator.tests.tools import temp_dir
 
@@ -15,14 +16,13 @@ class TestWriting(TestCase):
 
     def classical_writing(self, document: Document):
         """Метод классической записи"""
-        paragraph = document.add_paragraph_to_document(document)
+        paragraph = document.add_paragraph_to_document()
         document.add_run_to_paragraph(paragraph, self.text)
 
     def fluent_writing(self, document: Document):
         """Метод fluent записи"""
-        document.paragraph(self.text).size(32).bold(True).italic(True).line_spacing(
-            12
-        ).add()
+        document.paragraph(self.text).size(32).bold(True).italic(True).line_spacing(12).add()
+        document.paragraph(self.text).bold(True).space_after(13).line_spacing(23).add()
 
     def fast_writing(self, document: Document):
         """Метод быстрой записи"""
@@ -37,12 +37,7 @@ class TestWriting(TestCase):
             italic = True
             size = 24
 
-        document.write(
-            document,
-            self.text,
-            paragraph_style=DefaultHeaderParagraphStyle,
-            text_style=MyTextStyle,
-        )
+        document.write(self.text, paragraph_style=DefaultHeaderParagraphStyle, text_style=MyTextStyle, alignment=AlignParagraph.CENTER)
 
     @temp_dir
     def _writing_test(self, _directory: Path, writing_func: Callable):
@@ -55,8 +50,7 @@ class TestWriting(TestCase):
 
         """
         # Формирование тестируемого документа
-        document = Document()
-        document.create_document(self.file_name, path=_directory)
+        document = Document(self.file_name, path=_directory)
         document.document_style = DocumentStyles.NORMAL
         writing_func(document)
         document.save_document()

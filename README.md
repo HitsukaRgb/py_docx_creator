@@ -41,9 +41,8 @@ from py_docx_creator.core.document.document import Document
 
 text = "Пример классической записи"
 
-document = Document()
-document.create_document("Документ.docx")
-paragraph = document.add_paragraph_to_document(document)
+document = Document("Документ.docx")
+paragraph = document.add_paragraph_to_document()
 run = document.add_run_to_paragraph(paragraph, text)
 document.save_document()
 
@@ -63,9 +62,8 @@ from py_docx_creator.core.document.document import Document
 from py_docx_creator.default_style_preset.default_paragraph_style import DefaultHeaderParagraphStyle
 from py_docx_creator.default_style_preset.default_text_style import DefaultHeaderTextStyle
 
-document = Document()
-document.create_document("Документ.docx")
-document.write(document, "Пример быстрой записи", paragraph_style=DefaultHeaderParagraphStyle, text_style=DefaultHeaderTextStyle)
+document = Document("Документ.docx")
+document.write("Пример быстрой записи", paragraph_style=DefaultHeaderParagraphStyle, text_style=DefaultHeaderTextStyle)
 document.save_document()
 
 ```
@@ -80,9 +78,10 @@ document.save_document()
 ```python
 
 from py_docx_creator.core.document.document import Document
+from py_docx_creator.enums.enum_align_paragraph import AlignParagraph
 
-document = Document()
-document.create_document("Документ.docx")
+
+document = Document("Документ.docx")
 document.paragraph("Пример Fluent записи").size(32).bold(True).italic(True).line_spacing(12).alignment(AlignParagraph.CENTER).add()
 document.save_document()
 
@@ -109,16 +108,15 @@ def instruction(doc: Document, **kwargs):
     file_name = kwargs.get("name", "document.docx")
     doc.name = file_name
     # Классическая запись
-    paragraph = doc.add_paragraph_to_document(doc)
+    paragraph = doc.add_paragraph_to_document()
     run = doc.add_run_to_paragraph(paragraph, f"{file_name} - Пример классической записи")
     # Быстрая запись
-    doc.write(doc, f"{file_name} - Пример быстрой записи", paragraph_style=DefaultHeaderParagraphStyle, text_style=DefaultHeaderTextStyle)
+    doc.write(f"{file_name} - Пример быстрой записи", paragraph_style=DefaultHeaderParagraphStyle, text_style=DefaultHeaderTextStyle)
     # Fluent запись
     doc.paragraph(f"{file_name} - Пример Fluent записи").italic(True).size(18).first_line_indent(30).space_after(30).add()
     doc.save_document()
 
-document = Document()
-document.create_document("document.docx")
+document = Document("document.docx")
 document.creation_instruction = instruction # инструкция по формированию документа
 document.instruction_kwargs = {"name": "Конвейерное создание документов.docx"} # аргументы выполняемой функции
 document.run_instruction() # запуск формирования документа 
@@ -142,18 +140,17 @@ from py_docx_creator.default_style_preset.default_text_style import DefaultHeade
 def instruction(doc: Document, **kwargs):
     file_name = kwargs.get("name", "document.docx")
     # Классическая запись
-    paragraph = doc.add_paragraph_to_document(doc)
+    paragraph = doc.add_paragraph_to_document()
     run = doc.add_run_to_paragraph(paragraph, f"{file_name} - Пример классической записи")
     # Быстрая запись
-    doc.write(doc, f"{file_name} - Пример быстрой записи", paragraph_style=DefaultHeaderParagraphStyle, text_style=DefaultHeaderTextStyle)
+    doc.write(f"{file_name} - Пример быстрой записи", paragraph_style=DefaultHeaderParagraphStyle, text_style=DefaultHeaderTextStyle)
     # Fluent запись
     doc.paragraph(f"{file_name} - Пример Fluent записи").italic(True).size(18).first_line_indent(30).space_after(30).add()
     doc.save_document()
 
 document_creator = DocumentCreator()
 for i in range(10):  # имитация конвейера
-    document: Document = Document()
-    document.create_document(f"{i}.docx")
+    document: Document = Document(f"{i}.docx")
     document.creation_instruction = instruction  # инструкция по формированию документа
     document.instruction_kwargs = {"name": f"{i}.docx"}  # аргументы выполняемой функции
     document_creator.add_document(document)  # список экземпляров `Document` готовых к формированию
@@ -224,10 +221,9 @@ class MyParagraphStyle(DefaultHeaderParagraphStyle): # Стиль парагра
 class MyPageStyle(DefaultPageStyle): # Стиль страницы
     left_margin = 200.0
 
-document = Document()
-document.create_document("Документ.docx")
+document = Document("Документ.docx")
 document.apply_style(document, style=MyPageStyle) # пример того как задать стиль страницы `PageStyle`
-document.write(document, "Базовый пример использования", paragraph_style=MyParagraphStyle, text_style=MyTextStyle)
+document.write("Базовый пример использования", paragraph_style=MyParagraphStyle, text_style=MyTextStyle)
 document.save_document()
 
 ```
@@ -258,7 +254,7 @@ document.save_document()
 
 ```python
 
-document.write(document, "Базовый пример использования", 
+document.write("Базовый пример использования", 
                paragraph_style=DefaultHeaderParagraphStyle, 
                text_style=DefaultHeaderTextStyle,
                size=12,
@@ -281,7 +277,7 @@ write_config = {
     "space_after": 10
 }
 
-document.write(document, "Базовый пример использования", **write_config)
+document.write("Базовый пример использования", **write_config)
 
 ```
 

@@ -14,8 +14,7 @@ class TestDocumentCreating(TestCase):
     @temp_dir
     def test_single_creation_document(self, directory: Path):
         """Формирование одиночного документа"""
-        document = Document()
-        document.create_document(self.file_name, path=directory)
+        document = Document(self.file_name, path=directory)
         document.save_document()
         self.assertIs(Path(directory, self.file_name).exists(), True)
 
@@ -27,8 +26,7 @@ class TestDocumentCreating(TestCase):
 
         document_creator = DocumentCreator()
         for i in range(10):
-            document: Document = Document()
-            document.create_document(f"{i}.docx", path=directory)
+            document: Document = Document(f"{i}.docx", path=directory)
             document.creation_instruction = instruction
             document.instruction_kwargs = {"name": f"{i}.docx"}
             document_creator.add_document(document)
@@ -38,24 +36,16 @@ class TestDocumentCreating(TestCase):
     def test_pipeline_creation_documents_with_thread(self, directory: Path):
         """Тестирование формирования в потоках"""
         document_creator = self._build_pipeline_documents(directory)
-        document_creator.start_creating_documents(
-            use_threads=True, use_multiprocess=False
-        )
+        document_creator.start_creating_documents(use_threads=True, use_multiprocess=False)
 
     @temp_dir
     def test_pipeline_creation_documents_with_multiprocess(self, directory: Path):
         """Тестирование формирования в процессах"""
         document_creator = self._build_pipeline_documents(directory)
-        document_creator.start_creating_documents(
-            use_threads=False, use_multiprocess=True
-        )
+        document_creator.start_creating_documents(use_threads=False, use_multiprocess=True)
 
     @temp_dir
-    def test_pipeline_creation_documents_with_multiprocess_and_threads(
-        self, directory: Path
-    ):
+    def test_pipeline_creation_documents_with_multiprocess_and_threads(self, directory: Path):
         """Тестирование формирования в процессах и потоках одновременно"""
         document_creator = self._build_pipeline_documents(directory)
-        document_creator.start_creating_documents(
-            use_threads=True, use_multiprocess=True
-        )
+        document_creator.start_creating_documents(use_threads=True, use_multiprocess=True)
