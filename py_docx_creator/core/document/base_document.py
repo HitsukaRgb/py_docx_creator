@@ -4,6 +4,8 @@ from typing import Callable, Any
 from py_docx_creator.abstract_classes.abc_document.abc_base_document import ABCBaseDocument
 from docx import Document as DocxDocument  # alias
 
+from py_docx_creator.abstract_classes.abc_document.abc_document import ABCDocument
+
 
 class BaseDocument(ABCBaseDocument):
     """
@@ -51,9 +53,9 @@ class BaseDocument(ABCBaseDocument):
             raise ValueError("Документ не инициализирован")
         self.document.save(self.path)
 
-    def run_instruction(self):
+    def run_instruction(self, document: "ABCDocument"):
         if self.creation_instruction:
-            self.creation_instruction(self, **self._instruction_kwargs)
+            self.creation_instruction(document, **self._instruction_kwargs)
         else:
             raise Exception("Инструкция не задана!")
 

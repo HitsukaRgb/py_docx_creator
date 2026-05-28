@@ -149,16 +149,6 @@ class ABCDocument(ABC):
         """
         pass
 
-    @abstractmethod
-    def create_document(self, file_name: str, path: str | Path | None) -> None:
-        """
-        Создание документа
-
-        Args:
-            file_name (str): Наименование документа
-            path (str | Path | None): Путь формирования документа
-        """
-        pass
 
     @abstractmethod
     def load_document(self) -> None:

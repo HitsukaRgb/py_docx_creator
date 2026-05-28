@@ -36,7 +36,7 @@ class ABCBaseDocument(ABC):
         pass
 
     @abstractmethod
-    def run_instruction(self) -> None:
+    def run_instruction(self, document: "ABCDocument") -> None:
         """Запуск инструкции формирования документа"""
         pass
 

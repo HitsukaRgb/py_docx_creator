@@ -122,16 +122,6 @@ class Document(ABCDocument):
         """
         self._style.apply_style(target, style)
 
-    def create_document(self, file_name: str, path: str | Path | None) -> None:
-        """
-        Создание документа
-
-        Args:
-            file_name (str): Наименование документа
-            path (str | Path | None): Путь формирования документа
-        """
-        self._doc_builder.create_document(file_name, path)
-
     def load_document(self) -> None:
         """Загрузка уже имеющегося документа"""
         self._doc_builder.load_document()
@@ -144,7 +134,7 @@ class Document(ABCDocument):
         """
         Запуск инструкции формирования документа
         """
-        self._doc_builder.run_instruction()
+        self._doc_builder.run_instruction(self)
 
     @property
     def creation_instruction(self) -> Callable:

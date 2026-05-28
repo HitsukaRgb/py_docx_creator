@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, TYPE_CHECKING
+from typing import Any, TYPE_CHECKING, Union
 
 from docx.styles.styles import Styles
 from docx.text.paragraph import Paragraph
@@ -29,7 +29,7 @@ class ABCDocumentStyle(ABC):
 
     @classmethod
     @abstractmethod
-    def apply_style(cls, target: "ABCDocument" | Run | Paragraph, style: Any) -> None:
+    def apply_style(cls, target: Union["ABCDocument", Run, Paragraph], style: Any) -> None:
         """
         Применение стиля к передаваемому объекту
 
