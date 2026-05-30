@@ -11,6 +11,9 @@ from py_docx_creator.abstract_classes.abc_document.abc_document import ABCDocume
 from py_docx_creator.abstract_classes.abc_document.abc_document_style import (
     ABCDocumentStyle,
 )
+from py_docx_creator.enums.enum_base_paragraph_style import BaseParagraphStyle
+from docx.oxml import OxmlElement
+from docx.oxml.ns import qn
 
 
 class DocumentStyle(ABCDocumentStyle):
@@ -77,9 +80,9 @@ class DocumentStyle(ABCDocumentStyle):
                     value = value.value
                 setattr(target.font, field.name, value)
 
-    @staticmethod
-    def _apply_paragraph_style(target: Paragraph, style: Any):
-        paragraph_style = target.paragraph_format
+    @classmethod
+    def _apply_paragraph_style(cls, target: Paragraph, style: Any):
+        paragraph_format = target.paragraph_format
         for field in fields(style):
             value = getattr(style, field.name)
             if value is not None:
@@ -98,5 +101,50 @@ class DocumentStyle(ABCDocumentStyle):
                 elif field.name in ("alignment",):
                     # Получение значения из Enum для выравнивания
                     value = value.value
+                elif field.name in ("base_paragraph_style",):
+                    target.style = value.value
 
-                setattr(paragraph_style, field.name, value)
+                    if value == BaseParagraphStyle.LIST_NUMBER:
+                        try:
+                            # Сброс нумерации списка в случае если предыдущий параграф не является нумерованным списком
+                            doc_paragraphs = target._p.getparent().xpath("w:p")
+                            current_index = doc_paragraphs.index(target._p)
+
+                            if current_index > 0:
+                                prev_p_element = doc_paragraphs[current_index - 1]
+                                paragraph_properties = prev_p_element.find(qn("w:pPr"))
+                                paragraph_style = paragraph_properties.find(qn("w:pStyle")) if paragraph_properties is not None else None
+
+                                if paragraph_style is None or paragraph_style.get(qn("w:val")) != "ListNumber":
+                                    cls.restart_list_numbering(target)
+                        except Exception as ex:
+                            print(f"Ошибка при сбросе нумерации: {ex}")
+                    continue
+
+                setattr(paragraph_format, field.name, value)
+
+    @staticmethod
+    def restart_list_numbering(paragraph: Paragraph) -> None:
+
+        paragraph_properties = paragraph._p.get_or_add_pPr()
+
+        numbering_properties = paragraph_properties.find(qn("w:numPr"))
+        if numbering_properties is None:
+            numbering_properties = OxmlElement("w:numPr")
+            paragraph_properties.append(numbering_properties)
+
+        indent_level = numbering_properties.find(qn("w:ilvl"))
+        if indent_level is None:
+            indent_level = OxmlElement("w:ilvl")
+            indent_level.set(qn("w:val"), "0")
+            numbering_properties.append(indent_level)
+
+        list_id_element = numbering_properties.find(qn("w:numId"))
+        if list_id_element is not None:
+            numbering_properties.remove(list_id_element)
+
+        new_list_id_element = OxmlElement("w:numId")
+        unique_list_id = str(abs(hash(paragraph)) % 10000 + 10)
+        new_list_id_element.set(qn("w:val"), unique_list_id)
+
+        numbering_properties.append(new_list_id_element)

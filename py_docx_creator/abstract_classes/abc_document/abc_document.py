@@ -149,7 +149,6 @@ class ABCDocument(ABC):
         """
         pass
 
-
     @abstractmethod
     def load_document(self) -> None:
         """Загрузка уже имеющегося документа"""

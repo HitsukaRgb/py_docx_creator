@@ -52,9 +52,9 @@ class ABCDocumentStyle(ABC):
         """
         pass
 
-    @staticmethod
+    @classmethod
     @abstractmethod
-    def _apply_paragraph_style(target: Paragraph, style: Any) -> None:
+    def _apply_paragraph_style(cls, target: Paragraph, style: Any) -> None:
         """
         Применение стиля к параграфу
 
@@ -76,4 +76,10 @@ class ABCDocumentStyle(ABC):
             style (Any): Применяемый стиль
 
         """
+        pass
+
+    @staticmethod
+    @abstractmethod
+    def restart_list_numbering(paragraph: Paragraph):
+        """Обнуление нумерации при списочном стиле параграфа"""
         pass

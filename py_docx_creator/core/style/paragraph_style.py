@@ -4,6 +4,7 @@ from py_docx_creator.abstract_classes.abc_style_dataclasses.abc_paragraph_style 
     ABCParagraphStyle,
 )
 from py_docx_creator.enums.enum_align_paragraph import AlignParagraph
+from py_docx_creator.enums.enum_base_paragraph_style import BaseParagraphStyle
 
 
 @dataclass
@@ -20,6 +21,7 @@ class ParagraphStyle(ABCParagraphStyle):
         line_spacing (float | None): Межстрочный интервал.
         first_line_indent (float | None): Отступ первой строки (красная строка).
         page_break_before (bool | None): Разрыв страницы перед параграфом.
+        base_paragraph_style (BaseParagraphStyle | None): Базовый стиль параграфа (стиль python docx)
     """
 
     alignment: AlignParagraph | None = None  # выравнивание
@@ -30,3 +32,4 @@ class ParagraphStyle(ABCParagraphStyle):
     line_spacing: float | None = None  # межстрочный интервал
     first_line_indent: float | None = None  # отступ красной строки
     page_break_before: bool | None = None  # разрыв страницы перед параграфом
+    base_paragraph_style: BaseParagraphStyle | None = None  # базовый стиль параграфа (стиль python docx)

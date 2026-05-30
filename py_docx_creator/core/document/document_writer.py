@@ -21,6 +21,8 @@ from docx import Document as DocxDocument  # alias
 
 from typing import TYPE_CHECKING
 
+from py_docx_creator.enums.enum_base_paragraph_style import BaseParagraphStyle
+
 if TYPE_CHECKING:
     from py_docx_creator.core.document.document import Document
 
@@ -63,6 +65,7 @@ class DocumentWriter(ABCDocumentWriter):
         first_line_indent: float | None = None,
         with_leader: bool = False,
         leader_width: float = 6.8,
+        base_paragraph_style: BaseParagraphStyle | None = None,
     ) -> Paragraph:
         """
         Метод быстрой записи в документ
@@ -81,6 +84,7 @@ class DocumentWriter(ABCDocumentWriter):
             first_line_indent (float | None): Размер отступа для первой строки (красная строка)
             with_leader (bool | None): Включить ли заполнение остатка строки табуляцией со знаком '_'
             leader_width (float): Размер заполняемой табуляцией строки. По умолчанию: 6.8
+            base_paragraph_style (BaseParagraphStyle | None): Базовый стиль параграфа (Список, Нумерованный список, ...)
         Returns:
             Paragraph: Созданный параграф
         """
@@ -96,6 +100,7 @@ class DocumentWriter(ABCDocumentWriter):
                 alignment,
                 first_line_indent,
                 space_after,
+                base_paragraph_style,
             ]
         ):
             paragraph_style = copy(paragraph_style)
@@ -115,6 +120,8 @@ class DocumentWriter(ABCDocumentWriter):
                 paragraph_style.first_line_indent = first_line_indent
             if space_after is not None:
                 paragraph_style.space_after = space_after
+            if base_paragraph_style is not None:
+                paragraph_style.base_paragraph_style = base_paragraph_style
 
         if target is None:
             paragraph = self.document.add_paragraph_to_document()
@@ -130,7 +137,6 @@ class DocumentWriter(ABCDocumentWriter):
                 alignment=WD_TAB_ALIGNMENT.RIGHT,
                 leader=WD_TAB_LEADER.LINES,
             )
-
         DocumentStyle.apply_style(paragraph, paragraph_style)
         run = self.add_run_to_paragraph(paragraph, text)
         DocumentStyle.apply_style(run, text_style)

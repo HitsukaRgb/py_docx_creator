@@ -1,7 +1,10 @@
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Callable, Any
+from typing import Callable, Any, TYPE_CHECKING
 from docx import Document as DocxDocument  # alias
+
+if TYPE_CHECKING:
+    from py_docx_creator.abstract_classes.abc_document.abc_document import ABCDocument
 
 
 class ABCBaseDocument(ABC):

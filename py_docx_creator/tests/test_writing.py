@@ -2,8 +2,9 @@ from pathlib import Path
 from typing import Callable
 from unittest import TestCase
 
-from py_docx_creator.abstract_classes.abc_document.abc_document import ABCDocument
 from py_docx_creator.core.document.document import Document
+from py_docx_creator.default_style_preset.default_paragraph_style import DefaultHeaderParagraphStyle
+from py_docx_creator.default_style_preset.default_text_style import DefaultHeaderTextStyle
 from py_docx_creator.enums.enum_align_paragraph import AlignParagraph
 from py_docx_creator.enums.enum_document_styles import DocumentStyles
 from py_docx_creator.tests.tools import temp_dir
@@ -27,12 +28,6 @@ class TestWriting(TestCase):
 
     def fast_writing(self, document: Document):
         """Метод быстрой записи"""
-        from py_docx_creator.default_style_preset.default_paragraph_style import (
-            DefaultHeaderParagraphStyle,
-        )
-        from py_docx_creator.default_style_preset.default_text_style import (
-            DefaultHeaderTextStyle,
-        )
 
         class MyTextStyle(DefaultHeaderTextStyle):  # Стиль текста
             italic = True
@@ -74,29 +69,3 @@ class TestWriting(TestCase):
     def test_classical_writing(self):
         """Классическая запись"""
         self._writing_test(self.classical_writing)
-
-    @temp_dir
-    def test_read_me(self, _directory: Path):
-        from py_docx_creator.core.document.document import Document
-        from py_docx_creator.default_style_preset.default_paragraph_style import DefaultHeaderParagraphStyle
-        from py_docx_creator.default_style_preset.default_text_style import DefaultHeaderTextStyle
-
-        def instruction(doc: Document, **kwargs):
-            print(doc)
-            file_name = kwargs.get("name", "document.docx")
-            doc.name = file_name
-            # Классическая запись
-            paragraph = doc.add_paragraph_to_document()
-            run = doc.add_run_to_paragraph(paragraph, f"{file_name} - Пример классической записи")
-            # Быстрая запись
-            doc.write(f"{file_name} - Пример быстрой записи", paragraph_style=DefaultHeaderParagraphStyle,
-                      text_style=DefaultHeaderTextStyle)
-            # Fluent запись
-            doc.paragraph(f"{file_name} - Пример Fluent записи").italic(True).size(18).first_line_indent(
-                30).space_after(30).add()
-            doc.save_document()
-
-        document = Document("document.docx", path=_directory)
-        document.creation_instruction = instruction  # инструкция по формированию документа
-        document.instruction_kwargs = {"name": "Конвейерное создание документов.docx"}  # аргументы выполняемой функции
-        document.run_instruction()  # запуск формирования документа

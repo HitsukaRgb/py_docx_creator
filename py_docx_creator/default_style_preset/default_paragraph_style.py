@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 from py_docx_creator.core.style.paragraph_style import ParagraphStyle
 from py_docx_creator.enums.enum_align_paragraph import AlignParagraph
+from py_docx_creator.enums.enum_base_paragraph_style import BaseParagraphStyle
 
 
 @dataclass
@@ -18,6 +19,7 @@ class DefaultHeaderParagraphStyle(ParagraphStyle):
     alignment: AlignParagraph = AlignParagraph.CENTER
     left_indent: float = -0.5
     right_indent: float = -0.5
+    base_paragraph_style: BaseParagraphStyle = BaseParagraphStyle.NORMAL
 
 
 @dataclass
@@ -40,3 +42,4 @@ class DefaultMainParagraphStyle(ParagraphStyle):
     right_indent: float | None = -0.5
     line_spacing: float | None = 1.15
     first_line_indent: float | None = 20
+    base_paragraph_style: BaseParagraphStyle = BaseParagraphStyle.NORMAL

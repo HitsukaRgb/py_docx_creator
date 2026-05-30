@@ -5,6 +5,7 @@ from py_docx_creator.abstract_classes.abc_style_dataclasses.abc_paragraph_style 
     ABCParagraphStyle,
 )
 from py_docx_creator.enums.enum_align_paragraph import AlignParagraph
+from py_docx_creator.enums.enum_base_paragraph_style import BaseParagraphStyle
 
 
 class ABCParagraphBuilder(ABC):
@@ -31,6 +32,7 @@ class ABCParagraphBuilder(ABC):
     _line_spacing: float | None
     _first_line_indent: float | None
     _page_break_before: bool | None
+    _base_paragraph_style: BaseParagraphStyle | None
 
     @abstractmethod
     def alignment(self, alignment: AlignParagraph | None) -> Self:
@@ -141,6 +143,18 @@ class ABCParagraphBuilder(ABC):
         Returns:
             Self: Класс Builder
 
+        """
+        pass
+
+    @abstractmethod
+    def base_paragraph_style(self, style: BaseParagraphStyle) -> ABCParagraphStyle:
+        """
+        Базовый стиль параграфа
+
+        Args:
+            style (BaseParagraphStyle): Базовый стиль
+        Returns:
+            Self: Класс Builder
         """
         pass
 

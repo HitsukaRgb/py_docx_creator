@@ -9,6 +9,7 @@ from py_docx_creator.abstract_classes.abc_document.abc_builder import ABCBuilder
 from py_docx_creator.abstract_classes.abc_style_dataclasses.abc_paragraph_style import ABCParagraphStyle
 from py_docx_creator.abstract_classes.abc_style_dataclasses.abc_text_style import ABCTextStyle
 from py_docx_creator.enums.enum_align_paragraph import AlignParagraph
+from py_docx_creator.enums.enum_base_paragraph_style import BaseParagraphStyle
 
 if TYPE_CHECKING:
     from py_docx_creator.abstract_classes.abc_document.abc_document import ABCDocument
@@ -87,6 +88,7 @@ class ABCDocumentWriter(ABC):
         first_line_indent: float | None = None,
         with_leader: bool = False,
         leader_width: float = 6.8,
+        base_paragraph_style: BaseParagraphStyle | None = None,
     ) -> Paragraph:
         """
         Метод быстрой записи в документ
@@ -106,6 +108,7 @@ class ABCDocumentWriter(ABC):
             first_line_indent (float | None): Размер отступа для первой строки (красная строка)
             with_leader (bool | None): Включить ли заполнение остатка строки табуляцией со знаком '_'
             leader_width (float): Размер заполняемой табуляцией строки. По умолчанию: 6.8
+            base_paragraph_style (BaseParagraphStyle | None): Базовый стиль параграфа (Список, Нумерованный список, ...)
         Returns:
             Paragraph: Созданный параграф
         """
