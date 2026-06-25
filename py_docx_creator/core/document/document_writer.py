@@ -1,4 +1,4 @@
-from copy import copy
+from copy import deepcopy
 
 from docx.enum.text import WD_TAB_LEADER, WD_TAB_ALIGNMENT
 from docx.shared import Inches
@@ -103,8 +103,15 @@ class DocumentWriter(ABCDocumentWriter):
                 base_paragraph_style,
             ]
         ):
-            paragraph_style = copy(paragraph_style)
-            text_style = copy(text_style)
+            if isinstance(paragraph_style, type):
+                paragraph_style = paragraph_style()
+            else:
+                paragraph_style = deepcopy(paragraph_style)
+
+            if isinstance(text_style, type):
+                text_style = text_style()
+            else:
+                text_style = deepcopy(text_style)
 
             if bold is not None:
                 text_style.bold = bold
